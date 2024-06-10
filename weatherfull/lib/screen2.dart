@@ -23,10 +23,7 @@ class _Screen2State extends State<Screen2> {
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
+              Navigator.pop(context);
             },
             child: Icon(Icons.home),
           ),
