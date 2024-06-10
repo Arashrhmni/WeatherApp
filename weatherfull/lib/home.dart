@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'screen2.dart';
 import 'themedata.dart';
 
 int themeNumber = 0;
@@ -18,6 +18,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Screen2()),
+              );
+            },
+            child: Icon(Icons.menu),
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          ),
           appBar: AppBar(
             backgroundColor: data[0],
             shadowColor: Colors.black,
