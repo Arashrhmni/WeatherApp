@@ -1,4 +1,4 @@
-# weatherfull
+# WeatherFull
 
 Our Weather App
 
