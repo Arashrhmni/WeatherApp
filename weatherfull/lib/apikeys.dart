@@ -1,2 +1,2 @@
 String googleAPIKey = 'AIzaSyBvKy7vLbtgyElpQMn9ANATeDYFijQAna0';
-String openWeather = '5772a88ebf1506810ea163d34fa94f7b';
+String openWeather = '81189d6488d6f52a341bae5c29d7a4dd';
