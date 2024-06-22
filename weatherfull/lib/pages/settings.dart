@@ -60,7 +60,8 @@ class _SettingsWindowState extends State<SettingsWindow> {
               style: TextStyle(
                 color: themeData[currentSettings['theme']]!['text'],
                 fontSize: 30.0 * heightFactor,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Fredoka'
               ),
             ),
           ),
@@ -103,6 +104,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
           child: Form(
             child: Column(
               children: [
+                // Theme
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -116,7 +118,8 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                   ),
@@ -133,6 +136,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Light',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: false,
@@ -158,6 +162,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Dark',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: true,
@@ -187,6 +192,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
+                // Temperature
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -200,7 +206,8 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                   ),
@@ -217,6 +224,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Celcius (°C)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'celcius',
@@ -242,6 +250,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Fahrenheit (°F)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'fahrenheit',
@@ -267,6 +276,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Kelvin (K)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'kelvin',
@@ -296,6 +306,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
+                // Wind Speed
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -309,7 +320,8 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                   ),
@@ -326,6 +338,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Meter per Second (m/s)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'meter-per-second',
@@ -351,6 +364,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Kilometer per Hour (km/h)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'kilometer-per-hour',
@@ -376,6 +390,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Miles per Hour (mph)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'miles-per-hour',
@@ -405,6 +420,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
+                // Pressure
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -418,7 +434,8 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                   ),
@@ -435,6 +452,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Pascal (Pa)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'pa',
@@ -460,6 +478,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Hectopascal (hPa) (1 hPa = 100 Pa)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'hPa',
@@ -485,6 +504,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Standard Atmosphere (atm)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'atm',
@@ -510,6 +530,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Millimeters of Mercury (mmHg)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'mmHg',
@@ -539,6 +560,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
+                // Visibility
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -552,7 +574,8 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                   ),
@@ -569,6 +592,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Meters (m)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'meters',
@@ -594,6 +618,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Kilometers (km)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'kilometers',
@@ -619,6 +644,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Miles (miles)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'miles',
@@ -644,6 +670,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Feet (ft)',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'feet',
@@ -673,6 +700,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
+                // Time Format
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -686,7 +714,8 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                   ),
@@ -703,6 +732,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       '24 Hour',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: '24',
@@ -728,6 +758,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       '12 Hour',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: '12',
@@ -757,6 +788,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
+                // Date Format
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -770,7 +802,8 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                   ),
@@ -787,6 +820,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Day / Month / Year',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'dmy',
@@ -812,6 +846,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Day / Year / Month',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'dym',
@@ -837,6 +872,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Month / Day / Year',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'mdy',
@@ -862,6 +898,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Month / Year / Day',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'myd',
@@ -887,6 +924,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Year / Month / Day',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'ymd',
@@ -912,6 +950,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                       'Year / Day / Month',
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
+                        fontFamily: 'Fredoka'
                       ),
                     ),
                     value: 'ydm',

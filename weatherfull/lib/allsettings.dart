@@ -135,7 +135,7 @@ const Map<String, Map<String, Color>> themeData = {
     'accent': Color.fromARGB(255, 52, 135, 187),
     'text': Color.fromARGB(255, 240, 240, 240),
     'flat_icons': Color.fromARGB(255, 209, 209, 209),
-    'shadow': Color.fromARGB(255, 255, 255, 255),
+    'shadow': Color.fromARGB(255, 219, 218, 218),
     'dropdown_text': Color.fromARGB(255, 0, 0, 0),
     'dropdown_accent': Color.fromARGB(255, 202, 202, 202),
   },

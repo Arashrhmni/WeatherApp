@@ -81,13 +81,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(
                     color: themeData[currentSettings['theme']]!['text'],
                     fontSize: 20.0 * heightFactor,
+                    fontFamily: 'Fredoka'
                   ),
                 ),
-                title: Text(
-                  favourites[index][0],
-                  style: TextStyle(
-                    color: themeData[currentSettings['theme']]!['text'],
-                    fontWeight: FontWeight.bold
+                title: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    favourites[index][0],
+                    style: TextStyle(
+                      color: themeData[currentSettings['theme']]!['text'],
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Fredoka'
+                    ),
                   ),
                 ),
                 trailing: Image.network(
@@ -132,15 +137,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Text(
                   temp,
                   style: TextStyle(
-                    color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                    color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.4),
                     fontSize: 20.0 * heightFactor,
+                    fontFamily: 'Fredoka'
                   ),
                 ),
-                title: Text(
-                  favourites[index][0],
-                  style: TextStyle(
-                    color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                    fontWeight: FontWeight.bold
+                title: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    favourites[index][0],
+                    style: TextStyle(
+                      color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.4),
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Fredoka'
+                    ),
                   ),
                 ),
                 trailing: icon,
@@ -215,7 +225,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Current Location',
                   style: TextStyle(
                     color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.7),
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Fredoka'
                   ),
                 ),
                 Container(
@@ -232,13 +243,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(
                       color: themeData[currentSettings['theme']]!['text'],
                       fontSize: 20.0 * heightFactor,
+                      fontFamily: 'Fredoka'
                     ),
                   ),
-                  title: Text(
-                    currentLocationData[1],
-                    style: TextStyle(
-                      color: themeData[currentSettings['theme']]!['text'],
-                      fontWeight: FontWeight.bold
+                  title: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      currentLocationData[1],
+                      style: TextStyle(
+                        color: themeData[currentSettings['theme']]!['text'],
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
+                      ),
                     ),
                   ),
                   trailing: Image.network(
@@ -277,13 +293,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
                   fontSize: 20.0 * heightFactor,
+                  fontFamily: 'Fredoka'
                 ),
               ),
-              title: Text(
-                lastLocation['cityName'],
-                style: TextStyle(
-                  color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                  fontWeight: FontWeight.bold
+              title: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  lastLocation['cityName'],
+                  style: TextStyle(
+                    color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Fredoka'
+                  ),
                 ),
               ),
               trailing: Image.network(
@@ -328,7 +349,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Current Location',
                   style: TextStyle(
                     color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.7),
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Fredoka'
                   ),
                 ),
                 Container(
@@ -353,16 +375,45 @@ class _HomeScreenState extends State<HomeScreen> {
         return (await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Are you sure?'),
-            content: const Text('Do you want to exit the app?'),
+            actionsAlignment: MainAxisAlignment.center,
+            backgroundColor: themeData[currentSettings['theme']]!['accent'],
+            title: Text(
+              'Are you sure?',
+              style: TextStyle(
+                color: themeData[currentSettings['theme']]!['text']!,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Fredoka'
+              ),
+            ),
+            content: Text(
+              'Do you want to exit the app?',
+              style: TextStyle(
+                color: themeData[currentSettings['theme']]!['text']!,
+                fontFamily: 'Fredoka'
+              ),
+            ),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('No'),
+                child: Text(
+                  'No',
+                  style: TextStyle(
+                    color: themeData[currentSettings['theme']]!['text']!,
+                    fontFamily: 'Fredoka',
+                    fontWeight: FontWeight.w600
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Yes'),
+                child: Text(
+                  'Yes',
+                  style: TextStyle(
+                    color: themeData[currentSettings['theme']]!['text']!,
+                    fontFamily: 'Fredoka',
+                    fontWeight: FontWeight.w600
+                  ),
+                ),
               ),
             ],
           ),
@@ -402,7 +453,8 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 color: themeData[currentSettings['theme']]!['text'],
                 fontSize: 30.0 * heightFactor,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Fredoka'
               ),
             ),
           ),
@@ -479,7 +531,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: TextStyle(
                               color: themeData[currentSettings['theme']]!['text']!,
                               fontSize: 32.0 * heightFactor,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Fredoka'
                             )
                           ),
                           Container(
@@ -495,7 +548,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: TextStyle(
                               color: themeData[currentSettings['theme']]!['text']!,
                               fontSize: 24.0 * heightFactor,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Fredoka'
                             )
                           ),
                           Text(
@@ -503,7 +557,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: TextStyle(
                               color: themeData[currentSettings['theme']]!['text']!,
                               fontSize: 18.0 * heightFactor,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Fredoka'
                             )
                           ),
                         ],
@@ -540,7 +595,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         'Favorites',
                         style: TextStyle(
                           color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.7),
-                          fontWeight: FontWeight.bold
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Fredoka'
                         ),
                       ),
                       Container(

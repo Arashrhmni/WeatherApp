@@ -112,7 +112,8 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
                     style: TextStyle(
                       color: themeData[currentSettings['theme']]!['text'],
                       fontSize: 17.0 * heightFactor,
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Fredoka'
                     ),
                   ),
                 ),
@@ -139,7 +140,8 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
                     style: TextStyle(
                       color: themeData[currentSettings['theme']]!['text'],
                       fontSize: 13.0 * heightFactor,
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Fredoka'
                     ),
                   ),
                 ),
@@ -198,11 +200,12 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
             borderRadius: BorderRadius.circular(10.0),
           ),
           leading: Text(
-            temperatureForecast[i],
+            'Avg : ${temperatureForecast[i]}',
             style: TextStyle(
               color: themeData[currentSettings['theme']]!['text'],
               fontSize: 17.0 * heightFactor,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Fredoka'
             ),
           ),
           trailing: const SizedBox.shrink(),
@@ -213,7 +216,8 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
               style: TextStyle(
                 color: themeData[currentSettings['theme']]!['text'],
                 fontSize: 15.0 * heightFactor,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Fredoka'
               ),
             ),
           ),
@@ -443,7 +447,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 style: TextStyle(
                   color: themeData[currentSettings['theme']]!['text'],
                   fontSize: 30.0 * heightFactor,
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Fredoka'
                 )
               ),
             ),
@@ -495,7 +500,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                   style: TextStyle(
                                     color: themeData[currentSettings['theme']]!['text'],
                                     fontSize: 24.0 * heightFactor,
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Fredoka'
                                   ),
                                 ),
                               ),
@@ -507,6 +513,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                   style: TextStyle(
                                     color: themeData[currentSettings['theme']]!['text'],
                                     fontSize: 16.0 * heightFactor,
+                                    fontFamily: 'Fredoka'
                                   ),
                                 ),
                               ),
@@ -551,7 +558,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                   style: TextStyle(
                                     color: themeData[currentSettings['theme']]!['text'],
                                     fontSize: 16.0 * heightFactor,
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Fredoka'
                                   ),
                                 ),
                               ),
@@ -570,7 +578,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       style: TextStyle(
                                         color: themeData[currentSettings['theme']]!['text'],
                                         fontSize: 14.0 * heightFactor,
-                                        fontWeight: FontWeight.bold
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Fredoka'
                                       ),
                                     ),
                                     Container(
@@ -587,7 +596,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       style: TextStyle(
                                         color: themeData[currentSettings['theme']]!['text'],
                                         fontSize: 14.0 * heightFactor,
-                                        fontWeight: FontWeight.bold
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Fredoka'
                                       ),
                                     ),
                                   ],
@@ -638,7 +648,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 style: TextStyle(
                                   color: themeData[currentSettings['theme']]!['text'],
                                   fontSize: 48.0 * heightFactor,
-                                  fontWeight: FontWeight.bold
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Fredoka'
                                 ),
                               ),
                             ),
@@ -661,7 +672,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.bold
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                       Text(
@@ -669,7 +681,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.bold
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                       Text(
@@ -677,7 +690,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.bold
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                     ],
@@ -696,6 +710,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 15.0 * heightFactor,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                       Text(
@@ -703,6 +718,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 15.0 * heightFactor,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                       Text(
@@ -710,6 +726,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 15.0 * heightFactor,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                     ],
@@ -766,7 +783,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 style: TextStyle(
                                   color: themeData[currentSettings['theme']]!['text'],
                                   fontSize: 20.0 * heightFactor,
-                                  fontWeight: FontWeight.bold
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Fredoka'
                                 ),
                               ),
                             ),
@@ -820,7 +838,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 20.0 * heightFactor,
-                                          fontWeight: FontWeight.bold
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                     ),
@@ -839,7 +858,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                               style: TextStyle(
                                                 color: themeData[currentSettings['theme']]!['text'],
                                                 fontSize: 16.0 * heightFactor,
-                                                fontWeight: FontWeight.bold
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Fredoka'
                                               ),
                                             ),
                                             Text(
@@ -847,7 +867,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                               style: TextStyle(
                                                 color: themeData[currentSettings['theme']]!['text'],
                                                 fontSize: 16.0 * heightFactor,
-                                                fontWeight: FontWeight.bold
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Fredoka'
                                               ),
                                             ),
                                           ],
@@ -863,13 +884,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                               style: TextStyle(
                                                 color: themeData[currentSettings['theme']]!['text'],
                                                 fontSize: 15.0 * heightFactor,
+                                                fontFamily: 'Fredoka'
                                               ),
                                             ),
                                             Text(
                                               '${weather!.windDegree!.toStringAsFixed(0)}°',
                                               style: TextStyle(
                                                 color: themeData[currentSettings['theme']]!['text'],
-                                                fontSize: 15.0 * heightFactor
+                                                fontSize: 15.0 * heightFactor,
+                                                fontFamily: 'Fredoka'
                                               ),
                                             ),
                                           ],
@@ -888,7 +911,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.bold
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                     ),
@@ -963,7 +987,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       style: TextStyle(
                                         color: themeData[currentSettings['theme']]!['text'],
                                         fontSize: 18.0 * heightFactor,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Fredoka'
                                       ),
                                     ),
                                     Text(
@@ -971,7 +996,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       style: TextStyle(
                                         color: themeData[currentSettings['theme']]!['text'],
                                         fontSize: 18.0 * heightFactor,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Fredoka'
                                       ),
                                     ),
                                   ],
@@ -988,6 +1014,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       style: TextStyle(
                                         color: themeData[currentSettings['theme']]!['text'],
                                         fontSize: 15.0 * heightFactor,
+                                        fontFamily: 'Fredoka'
                                       ),
                                     ),
                                     Text(
@@ -995,6 +1022,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       style: TextStyle(
                                         color: themeData[currentSettings['theme']]!['text'],
                                         fontSize: 15.0 * heightFactor,
+                                        fontFamily: 'Fredoka'
                                       ),
                                     ),
                                   ],
@@ -1048,7 +1076,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.bold
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                       Text(
@@ -1056,6 +1085,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 15.0 * heightFactor,
+                                          fontFamily: 'Fredoka'
                                         ),
                                       ),
                                     ],
@@ -1122,7 +1152,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                     style: TextStyle(
                                       color: themeData[currentSettings['theme']]!['text'],
                                       fontSize: 18.0 * heightFactor,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Fredoka'
                                     ),
                                   ),
                                   Container(
@@ -1133,6 +1164,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                     style: TextStyle(
                                       color: themeData[currentSettings['theme']]!['text'],
                                       fontSize: 15.0 * heightFactor,
+                                      fontFamily: 'Fredoka'
                                     ),
                                   ),
                                   Container(
@@ -1170,7 +1202,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                             style: TextStyle(
                                               color: themeData[currentSettings['theme']]!['text'],
                                               fontSize: 18.0 * heightFactor,
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Fredoka'
                                             ),
                                           ),
                                         ),
@@ -1181,6 +1214,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                             style: TextStyle(
                                               color: themeData[currentSettings['theme']]!['text'],
                                               fontSize: 15.0 * heightFactor,
+                                              fontFamily: 'Fredoka'
                                             ),
                                           ),
                                         ),
@@ -1214,7 +1248,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                               color: themeData
                                               [currentSettings['theme']]!['text'],
                                               fontSize: 18.0 * heightFactor,
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Fredoka'
                                             ),
                                           ),
                                         ),
@@ -1225,6 +1260,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                             style: TextStyle(
                                               color: themeData[currentSettings['theme']]!['text'],
                                               fontSize: 15.0 * heightFactor,
+                                              fontFamily: 'Fredoka'
                                             ),
                                           ),
                                         ),
@@ -1274,11 +1310,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Text(
-                          'Next 24 Hours Forecast',
+                          'Next 24 Hours Forecast for Every 3 Hours',
                           style: TextStyle(
                             color: themeData[currentSettings['theme']]!['text'],
                             fontSize: 16.0 * heightFactor,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Fredoka'
                           ),
                         ),
                       ),
@@ -1322,7 +1359,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                           style: TextStyle(
                                             color: themeData[currentSettings['theme']]!['text'],
                                             fontSize: 20.0 * heightFactor,
-                                            fontWeight: FontWeight.bold
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Fredoka'
                                           ),
                                         ),
                                       ),
@@ -1351,7 +1389,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                             style: TextStyle(
                                               color: themeData[currentSettings['theme']]!['text'],
                                               fontSize: 14.0 * heightFactor,
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Fredoka'
                                             ),
                                           ),
                                         ),
@@ -1403,7 +1442,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontSize: 16.0 * widthFactor,
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Fredoka'
                       )
                     ),
                     initiallyExpanded: true,
@@ -1446,7 +1486,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 style: TextStyle(
                   color: themeData[currentSettings['theme']]!['text'],
                   fontSize: 30.0 * heightFactor,
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Fredoka'
                 )
               ),
             ),

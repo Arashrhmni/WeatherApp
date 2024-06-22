@@ -68,6 +68,9 @@ class _SearchWindowState extends State<SearchWindow> {
       if (input.isNotEmpty) {
         predictions = await getAutocompleteResults(input);
         setState(() {}); // Update the UI
+      } else {
+        predictions = [];
+        setState(() {}); // Update the UI
       }
     });
   }
@@ -113,7 +116,8 @@ class _SearchWindowState extends State<SearchWindow> {
               style: TextStyle(
                 color: themeData[currentSettings['theme']]!['text'],
                 fontSize: 30.0 * heightFactor,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Fredoka'
               )
             ),
           ),
@@ -173,6 +177,7 @@ class _SearchWindowState extends State<SearchWindow> {
                         },
                         style: TextStyle(
                           color: themeData[currentSettings['theme']]!['text'],
+                          fontFamily: 'Fredoka',
                         ),
                         controller: controller,
                         decoration: InputDecoration(
@@ -180,6 +185,7 @@ class _SearchWindowState extends State<SearchWindow> {
                           hintText: 'Search for a city',
                           hintStyle: TextStyle(
                             color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.4),
+                            fontFamily: 'Fredoka',
                           ),
                         ),
                         onChanged: (value) async {
@@ -206,10 +212,18 @@ class _SearchWindowState extends State<SearchWindow> {
                             itemBuilder: (context, index) {
                               Prediction prediction = Prediction.fromJson(predictions[index]);
                               return ListTile(
-                                title: Text(
-                                  prediction.description ?? "",
-                                  style: TextStyle(
-                                    color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.7),
+                                leading: Icon(
+                                  Icons.location_city,
+                                  color: themeData[currentSettings['theme']]!['text'],
+                                ),
+                                title: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(
+                                    prediction.description ?? "",
+                                    style: TextStyle(
+                                      color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.7),
+                                      fontFamily: 'Fredoka',
+                                    ),
                                   ),
                                 ),
                                 onTap: () async {
@@ -274,8 +288,9 @@ class _SearchWindowState extends State<SearchWindow> {
                       Text(
                         'History',
                         style: TextStyle(
-                          color: themeData[currentSettings['theme']]!['text']!,
-                          fontWeight: FontWeight.bold,
+                          color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.7),
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Fredoka'
                         ),
                       ),
                       Container(
@@ -296,10 +311,14 @@ class _SearchWindowState extends State<SearchWindow> {
                               Icons.history,
                               color: themeData[currentSettings['theme']]!['text'],
                             ),
-                            title: Text(
-                              historyList[index],
-                              style: TextStyle(
-                                color: themeData[currentSettings['theme']]!['text'],
+                            title: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                historyList[index],
+                                style: TextStyle(
+                                  color: themeData[currentSettings['theme']]!['text'],
+                                  fontFamily: 'Fredoka',
+                                ),
                               ),
                             ),
                             onTap: () {

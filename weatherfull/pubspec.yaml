@@ -105,17 +105,66 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka/Fredoka-Regular.ttf
+        - asset: assets/fonts/Fredoka/Fredoka-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Fredoka/Fredoka-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Fredoka/Fredoka-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Fredoka/Fredoka-Medium.ttf
+          weight: 500
+    
+    - family: FredokaCondensed
+      fonts:
+        - asset: assets/fonts/Fredoka/Fredoka_Condensed-Regular.ttf
+        - asset: assets/fonts/Fredoka/Fredoka_Condensed-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Fredoka/Fredoka_Condensed-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Fredoka/Fredoka_Condensed-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Fredoka/Fredoka_Condensed-Medium.ttf
+          weight: 500
+
+    - family: FredokaExpanded
+      fonts:
+        - asset: assets/fonts/Fredoka/Fredoka_Expanded-Regular.ttf
+        - asset: assets/fonts/Fredoka/Fredoka_Expanded-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Fredoka/Fredoka_Expanded-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Fredoka/Fredoka_Expanded-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Fredoka/Fredoka_Expanded-Medium.ttf
+          weight: 500
+
+    - family: FredokaSemiCondensed
+      fonts:
+        - asset: assets/fonts/Fredoka/Fredoka_SemiCondensed-Regular.ttf
+        - asset: assets/fonts/Fredoka/Fredoka_SemiCondensed-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Fredoka/Fredoka_SemiCondensed-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Fredoka/Fredoka_SemiCondensed-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Fredoka/Fredoka_SemiCondensed-Medium.ttf
+          weight: 500
+
+    - family: FredokaSemiExpanded
+      fonts:
+        - asset: assets/fonts/Fredoka/Fredoka_SemiExpanded-Regular.ttf
+        - asset: assets/fonts/Fredoka/Fredoka_SemiExpanded-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Fredoka/Fredoka_SemiExpanded-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Fredoka/Fredoka_SemiExpanded-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Fredoka/Fredoka_SemiExpanded-Medium.ttf
+          weight: 500
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
