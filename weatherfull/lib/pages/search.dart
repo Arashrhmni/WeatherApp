@@ -2,7 +2,7 @@ import 'package:google_places_autocomplete_text_field/model/prediction.dart';
 
 import '../allsettings.dart';
 import 'package:flutter/material.dart';
-import '../apikeys.dart';
+import '../confidential_constants.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

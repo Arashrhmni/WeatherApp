@@ -59,7 +59,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushNamed(context, '/homepage');
+        Navigator.popAndPushNamed(context, '/homepage');
         return Future.value(false);
       },
       child: Scaffold(
@@ -80,9 +80,10 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
             icon: Icon(
               Icons.home,
               color: themeData[currentSettings['theme']]!['text'],
+              size: 30.0 * heightFactor,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/homepage');
+              Navigator.popAndPushNamed(context, '/homepage');
             },
           ),
           actions: <Widget>[
@@ -91,6 +92,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               icon: Icon(
                 Icons.settings,
                 color: themeData[currentSettings['theme']]!['text'],
+                size: 30.0 * heightFactor,
               ),
               onPressed: () async {
                 var result = await Navigator.pushNamed(context, '/settings');

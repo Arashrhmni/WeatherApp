@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:weather/weather.dart';
-import '../apikeys.dart';
+import '../confidential_constants.dart';
 import '../allsettings.dart';
 import 'dart:math' as math;
 
-final Map weekdays = <int, String>{
-    DateTime.monday: 'Monday',
-    DateTime.tuesday: 'Tuesday',
-    DateTime.wednesday: 'Wednesday',
-    DateTime.thursday: 'Thursday',
-    DateTime.friday: 'Friday',
-    DateTime.saturday: 'Saturday',
-    DateTime.sunday: 'Sunday',
-  };
 
+// Function to get readable wind speed from weather data in the selected unit in the settings
 double getWindSpeedForWeather(Weather w) {
+  // If the wind speed is in meter-per-second, return the wind speed as it is
   if(currentSettings['wind_speed'] == 'meter-per-second') {
     return w.windSpeed!;
   } else if(currentSettings['wind_speed'] == 'kilometer-per-hour') {
+    // If the wind speed is in kilometer-per-hour, convert it to kilometer-per-hour and return
     return w.windSpeed! * 3.6;
   } else {
+    // If the wind speed is in miles-per-hour, convert it to miles-per-hour and return
     return w.windSpeed! * 2.23694;
   }
 }
 
+// Function to get readable wind direction from degrees
 String windDegreesToReadable(double degrees) {
+  // Basically just looked at the compass to formulate this function
   if(degrees >= 342.5 || degrees < 17.5) {
     return 'From North to South';
   } else if(degrees >= 17.5 && degrees < 72.5) {
@@ -45,42 +42,63 @@ String windDegreesToReadable(double degrees) {
   }
 }
 
-String convertTemp(double temp) {
-  if(currentSettings['temperature'] == 'celcius') {
-    return '${temp.toStringAsFixed(0)} °C';
-  } else if(currentSettings['temperature'] == 'fahrenheit') {
-    return '${(((temp*9)/5) + 32).toStringAsFixed(0)} °F';
-  } else {
-    return '${(temp + 273.15).toStringAsFixed(0)} K';
-  }
-
-}
-
-List<Container> get5DayForecastViewer(List<Weather> forecast) {
+// Function to form a list of containers for the forecast part
+List<Container> get4DayForecastViewer(List<Weather> forecast) {
+  // Get the date of the first forecast
   DateTime date = forecast[0].date!;
+  // List of containers to store the forecast tiles
   List<Container> forecastTiles = [];
-  int startIndex = 0;
-  List<List<Weather>> forecastDays = [];
+
+  // Get the forecast days
+  int startIndex = 0; // Start index of the forecast day
+  List<List<Weather>> forecastDays = []; // List of forecast days
   for (int i = 0; i < forecast.length; i++) {
+    // If the date of the forecast is not the same as the date of the previous forecast, meaning a new day
     if (forecast[i].date!.day != date.day) {
+      // Add the forecast day to the list of forecast days
       forecastDays.add(forecast.getRange(startIndex, i).toList());
+      // Update the start index and date
       startIndex = i;
       date = forecast[i].date!;
     }
   }
+  // Add the last of the forecast days to the list of forecast days
+  forecastDays.add(forecast.getRange(startIndex, forecast.length).toList());
+  // Remove the first day as it is the current day
   forecastDays.removeAt(0);
+  // If the last day is not complete, add the last two days together
+  var len = forecastDays.length;
+  if (forecastDays[len-1].length < 8) {
+    forecastDays[len-2] = forecastDays[len-2] + forecastDays[len-1];
+    forecastDays.removeAt(len-1);
+  }
+  // List of temperatures for the forecast days
   List<String> temperatureForecast = [];
   for(int i = 0; i < forecastDays.length; i++) {
-    temperatureForecast.add(convertTemp((forecastDays[i][0].tempMax!.celsius! + forecastDays[i][0].tempMin!.celsius!) / 2.0));
+    // calculating the average temperature throughout the day
+    double sum = 0.0;
+    double count = 0.0;
+    for (int j = 0; j < forecastDays[i].length; j++) {
+      sum += (forecastDays[i][j].temperature!.celsius!);
+      count += 1.0;
+    }
+    // Adding the average temperature to the list of temperatures
+    temperatureForecast.add(convertTemp((sum) / count));
   }
+  // List of forecast day tiles scrollable widgets
   List<SingleChildScrollView> forecastDayTilesScroll = [];
   for (int i = 0; i < forecastDays.length; i++) {
+    // List of forecast day tiles
     List<Container> forecastDayTiles = [];
+    // For each forecast day, add the forecast day tiles
     for (int j = 0; j < forecastDays[i].length; j++) {
       forecastDayTiles.add(
+        // Forecast Day Tile
         Container(
+          // width and height of the forecast day tile
           width: deviceWidth * 0.20,
           height: deviceHeight * 0.12,
+          // padding and margin of the forecast day tile
           padding: EdgeInsets.only(
             top: 10.0 * heightFactor,
             bottom: 10.0 * heightFactor,
@@ -92,6 +110,7 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
             left: 5.0 * widthFactor, 
             right: 5.0 * widthFactor
           ),
+          // decoration of the forecast day tile
           decoration: BoxDecoration(
             color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
             borderRadius: BorderRadius.circular(10.0),
@@ -100,14 +119,18 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
               width: 2.0 * widthFactor,
             ),
           ),
+          // child of the forecast day tile
           child: SingleChildScrollView(
             child: Column(
+              // alignment of the children
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Current Temperature
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Text(
+                    // Get the temperature for the weather
                     getTemperatureForWeather(forecastDays[i][j])['current']!,
                     style: TextStyle(
                       color: themeData[currentSettings['theme']]!['text'],
@@ -117,22 +140,26 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
                     ),
                   ),
                 ),
+                // divider
                 Container(
                   height: 1.0 * heightFactor,
                   color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
                   width: deviceWidth * 0.15,
                 ),
+                // weather icon
                 Image.network(
                   'http://openweathermap.org/img/wn/${forecastDays[i][j].weatherIcon}@4x.png',
                   height: deviceHeight * 0.05,
                   width: deviceWidth * 0.15,
                   fit: BoxFit.scaleDown,
                 ),
+                // divider
                 Container(
                   height: 1.0 * heightFactor,
                   color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
                   width: deviceWidth * 0.15,
                 ),
+                // the time of the forecast
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Text(
@@ -151,17 +178,23 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
         ),
       );
     }
+    // Scrollable widget for the forecast day tiles
     SingleChildScrollView forecastDayTileScroll = SingleChildScrollView(
+      // scroll direction of the scrollable widget is horizontal
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: forecastDayTiles,
+        children: forecastDayTiles, // children of the scrollable widget are the forecast day tiles
       ),
     );
+    // Add the scrollable widget to the list of forecast day tiles scrollable widgets
     forecastDayTilesScroll.add(forecastDayTileScroll);
   }
+  // For each forecast day, add the forecast day tiles scrollable widget to the forecast tiles
   for (int i = 0; i < forecastDayTilesScroll.length; i++) {
     forecastTiles.add(
+      // Forecast Tile
       Container(
+        // decoration of the forecast tile
         decoration: BoxDecoration(
           color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.2),
           borderRadius: BorderRadius.circular(10.0),
@@ -170,6 +203,7 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
             width: 1.0 * widthFactor,
           ),
         ),
+        // padding and margin of the forecast tile
         margin: EdgeInsets.only(
           top: 5.0 * heightFactor,
           bottom: 5.0 * heightFactor,
@@ -180,25 +214,31 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
           bottom: 5.0 * heightFactor,
           top: 5.0 * heightFactor,
         ),
+        // child of the forecast tile
         child: ExpansionTile(
+          // collapsed shape of the forecast tile
           collapsedShape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
+          // padding of the forecast tile
           tilePadding: EdgeInsets.only(
             top: 5.0 * heightFactor,
             bottom: 5.0 * heightFactor,
             left: 5.0 * widthFactor,
             right: 5.0 * widthFactor,
           ),
+          // padding of the children of the forecast tile
           childrenPadding: EdgeInsets.only(
             top: 5.0 * heightFactor,
             bottom: 5.0 * heightFactor,
             left: 5.0 * widthFactor,
             right: 5.0 * widthFactor,
           ),
+          // expanded shape of the forecast tile
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
+          // leading of the forecast tile
           leading: Text(
             'Avg : ${temperatureForecast[i]}',
             style: TextStyle(
@@ -208,11 +248,14 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
               fontFamily: 'Fredoka'
             ),
           ),
+          // the end of the forecast tile, empty but still a widget
           trailing: const SizedBox.shrink(),
+          // title of the forecast tile
           title: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Text(
-              '${weekdays[forecastDays[i][0].date!.weekday]}    ${makeReadableDate(forecastDays[i][0].date!)}',
+              // the weekday of the forecast and the date
+              '${weekdays[forecastDays[i][0].date!.weekday]} - ${makeReadableDate(forecastDays[i][0].date!)}',
               style: TextStyle(
                 color: themeData[currentSettings['theme']]!['text'],
                 fontSize: 15.0 * heightFactor,
@@ -222,79 +265,17 @@ List<Container> get5DayForecastViewer(List<Weather> forecast) {
             ),
           ),
           children: [
-            forecastDayTilesScroll[i],
+            forecastDayTilesScroll[i], // children of the forecast tile are the forecast day tiles scrollable widget
           ],
         ),
       ),
     );
   }
+  // Return the forecast tiles
   return forecastTiles;
 }
 
-Map<String, String> getTemperatureForWeather(Weather w) {
-  String currentTemp, minTemp, maxTemp, feelsLikeTemp;
-  if(currentSettings['temperature'] == 'celcius') {
-    currentTemp = '${(w.temperature!.celsius!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    minTemp = '${(w.tempMin!.celsius!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    maxTemp = '${(w.tempMax!.celsius!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    feelsLikeTemp = '${(w.tempFeelsLike!.celsius!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-  } else if(currentSettings['temperature'] == 'fahrenheit') {
-    currentTemp = '${(w.temperature!.fahrenheit!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    minTemp = '${(w.tempMin!.fahrenheit!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    maxTemp = '${(w.tempMax!.fahrenheit!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    feelsLikeTemp = '${(w.tempFeelsLike!.fahrenheit!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-  } else {
-    currentTemp = '${(w.temperature!.kelvin!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    minTemp = '${(w.tempMin!.kelvin!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    maxTemp = '${(w.tempMax!.kelvin!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-    feelsLikeTemp = '${(w.tempFeelsLike!.kelvin!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
-  }
-  return {
-    'current' : currentTemp,
-    'min' : minTemp,
-    'max' : maxTemp,
-    'feels_like' : feelsLikeTemp,
-  };
-}
-
-String makeBetter2ndAddress(String address) {
-  List<String> parts = address.split(', ');
-  String finalString = '';
-  for (int i = 0; i < parts.length; i++) {
-    List<String> words = parts[i].split(' ');
-    String part = '';
-    if (words.length > 1) {
-      for (int j = 0; j < words.length; j++) {
-        part += words[j][0].capitalize();
-      }
-    } else {
-      part += parts[i];
-    }
-    if (i == 0) {
-      finalString += part;
-    } else {
-      finalString += ', $part';
-    }
-  }
-  return finalString;
-}
-
-extension StringExtension on String {
-  String capitalize() {
-    if (isEmpty) {
-      return this;
-    } else {
-      String result = '';
-      bool makeUpper = true;
-      for (int i = 0; i < length; i++) {
-        result += makeUpper ? this[i].toUpperCase() : this[i].toLowerCase();
-        makeUpper = this[i] == ' ';
-      }
-      return result;
-    }
-  }
-}
-
+// The weather screen stateful widget
 class WeatherScreen extends StatefulWidget {
   
   final List<double> cityLatLong;
@@ -308,29 +289,37 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen> {
 
+  // Weather factory object
   WeatherFactory wf = WeatherFactory(openWeather);
+  // Weather object
   Weather? weather;
+  // Weather data
   Map<String, dynamic>? weatherData;
+  // Forecast data
   List<Weather>? forecast;
+  // Date and timezone offset
   DateTime? date;
   int? timezoneOffset;
   
-
+  // Favourites box
   var favourites = Hive.box('favourites');
+  // Favourites list
   var favouriteList = Hive.box('favourites').get('favourites', defaultValue: <List<dynamic>>[]).cast<List<dynamic>>();
-  bool? isFavourite;
-  IconData? icon;
+  bool? isFavourite; // is the city a favourite
+  IconData? favoriteIcon; // icon for the favourite button
 
+  // Function to get the local time from the UTC time
   DateTime getLocalTime(DateTime d) {
     DateTime newDate = DateTime.fromMillisecondsSinceEpoch(d.millisecondsSinceEpoch - (d.timeZoneOffset.inSeconds * 1000));
     newDate = DateTime.fromMillisecondsSinceEpoch(newDate.millisecondsSinceEpoch + timezoneOffset!);
     return newDate;
   }
 
+  // Init state
   @override
   void initState() {
     try {
-    super.initState();
+      super.initState();
     } catch(e) {
       // ignore
     } finally {
@@ -338,7 +327,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         if(i[0] == widget.cityName) {
           setState(() {
             isFavourite = true;
-            icon = Icons.favorite;
+            favoriteIcon = Icons.favorite;
           });
           break;
         }
@@ -346,7 +335,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       if(isFavourite == null) {
         setState(() {
           isFavourite = false;
-          icon = Icons.favorite_border;
+          favoriteIcon = Icons.favorite_border;
         });
       }
       wf.currentWeatherByLocation(widget.cityLatLong[0], widget.cityLatLong[1]).then((w) {
@@ -398,13 +387,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 favourites.put('favourites', favouriteList);
               }
               setState(() {
-                icon = isFavourite! ? Icons.favorite : Icons.favorite_border;
+                favoriteIcon = isFavourite! ? Icons.favorite : Icons.favorite_border;
               });
               setState(() => {});
             },
             backgroundColor: themeData[currentSettings['theme']]!['accent'],
             foregroundColor: themeData[currentSettings['theme']]!['text'],
-            child: Icon(icon),
+            child: Icon(favoriteIcon),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           appBar: AppBar(
@@ -1458,7 +1447,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           right: 10.0 * widthFactor,
                         ),
                         child: Column(
-                          children: get5DayForecastViewer(forecast!), // Assuming this returns a list of Widgets
+                          children: get4DayForecastViewer(forecast!), // Assuming this returns a list of Widgets
                         ),
                       ),
                     ],

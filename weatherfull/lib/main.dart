@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'pages/about.dart';
 import 'pages/weather.dart';
@@ -54,16 +55,14 @@ void main() async {
         
       })
     .request();
-  if (status.isGranted || status.isProvisional) {
-    status = await Permission.locationAlways.request();
-  }
   if (status.isDenied || status.isPermanentlyDenied || status.isRestricted) {
     exit(1);
   }
-  
-  runApp(
-    const Root()
-  );
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+    runApp(
+      const Root()
+    );
+  });
 }
 
 class Root extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:weather/weather.dart';
 
 var settings = Hive.box('settings');
 
@@ -133,10 +134,117 @@ const Map<String, Map<String, Color>> themeData = {
     'appBar': Color.fromARGB(255, 32, 127, 186),
     'main_body_background': Color.fromARGB(255, 34, 68, 100),
     'accent': Color.fromARGB(255, 52, 135, 187),
-    'text': Color.fromARGB(255, 240, 240, 240),
+    'text': Color.fromARGB(255, 255, 255, 255),
     'flat_icons': Color.fromARGB(255, 209, 209, 209),
     'shadow': Color.fromARGB(255, 219, 218, 218),
     'dropdown_text': Color.fromARGB(255, 0, 0, 0),
     'dropdown_accent': Color.fromARGB(255, 202, 202, 202),
   },
 };
+
+final Map weekdays = <int, String>{
+    DateTime.monday: 'Monday',
+    DateTime.tuesday: 'Tuesday',
+    DateTime.wednesday: 'Wednesday',
+    DateTime.thursday: 'Thursday',
+    DateTime.friday: 'Friday',
+    DateTime.saturday: 'Saturday',
+    DateTime.sunday: 'Sunday',
+  };
+
+// Function to convert temperature to the selected unit in the settings
+String convertTemp(double temp) {
+  // If the temperature is in celcius, return the temperature as it is
+  if(currentSettings['temperature'] == 'celcius') {
+    return '${temp.toStringAsFixed(0)} °C';
+  } else if(currentSettings['temperature'] == 'fahrenheit') {
+    // If the temperature is in fahrenheit, convert it to fahrenheit and return
+    return '${(((temp*9)/5) + 32).toStringAsFixed(0)} °F';
+  } else {
+    // If the temperature is in kelvin, convert it to kelvin and return
+    return '${(temp + 273.15).toStringAsFixed(0)} K';
+  }
+}
+
+// Function to get the temperature data for the weather
+Map<String, String> getTemperatureForWeather(Weather w) {
+  // defining the current temperature, minimum temperature, maximum temperature, and feels like temperature variables
+  String currentTemp, minTemp, maxTemp, feelsLikeTemp;
+
+  // An if else check to get the temperature in the selected unit in the settings
+  if(currentSettings['temperature'] == 'celcius') {
+    currentTemp = '${(w.temperature!.celsius!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    minTemp = '${(w.tempMin!.celsius!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    maxTemp = '${(w.tempMax!.celsius!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    feelsLikeTemp = '${(w.tempFeelsLike!.celsius!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+  } else if(currentSettings['temperature'] == 'fahrenheit') {
+    currentTemp = '${(w.temperature!.fahrenheit!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    minTemp = '${(w.tempMin!.fahrenheit!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    maxTemp = '${(w.tempMax!.fahrenheit!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    feelsLikeTemp = '${(w.tempFeelsLike!.fahrenheit!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+  } else {
+    currentTemp = '${(w.temperature!.kelvin!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    minTemp = '${(w.tempMin!.kelvin!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    maxTemp = '${(w.tempMax!.kelvin!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+    feelsLikeTemp = '${(w.tempFeelsLike!.kelvin!).toStringAsFixed(0)} ${temperatures[currentSettings['temperature']]}';
+  }
+  // Return the temperature data in a map
+  return {
+    'current' : currentTemp,
+    'min' : minTemp,
+    'max' : maxTemp,
+    'feels_like' : feelsLikeTemp,
+  };
+}
+
+// Function to make the 2nd part of the address better by capitalizing the first letter of each word and acronymizing the words
+String makeBetter2ndAddress(String address) {
+  // Split the address by ', ' to get the parts of the address
+  List<String> parts = address.split(', ');
+  // The final string to return
+  String finalString = '';
+  // For each part of the address
+  for (int i = 0; i < parts.length; i++) {
+    // Split the part by ' ' to get the words of the part
+    List<String> words = parts[i].split(' ');
+    String part = '';
+    // If the part has more than one word
+    if (words.length > 1) {
+      // For each word in the part
+      for (int j = 0; j < words.length; j++) {
+        // add the first letter of the word capitalized to the part
+        part += words[j][0].capitalize();
+      }
+    } else {
+      // If the part has only one word, add the first two letters of the word to the part
+      part += parts[i];
+    }
+    // If it is the first part, add the part to the final string
+    if (i == 0) {
+      finalString += part;
+    } else {
+      // If it is not the first part, add ', ' and the part to the final string
+      finalString += ', $part';
+    }
+  }
+  // Return the final string
+  return finalString;
+}
+
+
+// An extension to the string class to capitalize the first letter of each word in a given string
+extension StringExtension on String {
+  String capitalize() {
+    if (isEmpty) {
+      return this;
+    } else {
+      String result = '';
+      bool makeUpper = true;
+      for (int i = 0; i < length; i++) {
+        result += makeUpper ? this[i].toUpperCase() : this[i].toLowerCase();
+        makeUpper = this[i] == ' ';
+      }
+      return result;
+    }
+  }
+}
