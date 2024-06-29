@@ -4,6 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:window_size/window_size.dart';
+import 'package:desktop_window/desktop_window.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'pages/about.dart';
 import 'pages/weather.dart';
 import 'pages/home.dart';
@@ -11,9 +15,6 @@ import 'pages/search.dart';
 import 'pages/settings.dart';
 import 'pages/contact.dart';
 import 'allsettings.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:desktop_window/desktop_window.dart';
-import 'package:window_size/window_size.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

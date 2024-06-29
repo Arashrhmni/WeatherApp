@@ -319,100 +319,116 @@ class _WeatherScreenState extends State<WeatherScreen> {
   @override
   void initState() {
     try {
-      super.initState();
+      super.initState(); // try to initialize the state of the parent widget
     } catch(e) {
-      // ignore
+      // ignore the exception if any
     } finally {
+      // check if the city is a favourite
       for(var i in favouriteList) {
         if(i[0] == widget.cityName) {
           setState(() {
-            isFavourite = true;
-            favoriteIcon = Icons.favorite;
+            isFavourite = true; // set the city as a favourite
+            favoriteIcon = Icons.favorite; // set the icon as a favourite icon
           });
           break;
         }
       }
+      // if the city is not a favourite
       if(isFavourite == null) {
         setState(() {
-          isFavourite = false;
-          favoriteIcon = Icons.favorite_border;
+          isFavourite = false; // set the city as not a favourite
+          favoriteIcon = Icons.favorite_border; // set the icon as a not favourite icon
         });
       }
+      // get the weather data
       wf.currentWeatherByLocation(widget.cityLatLong[0], widget.cityLatLong[1]).then((w) {
         setState(() {
-          weather = w;
-          weatherData = weather!.toJson();
-          date = weather!.date;
-          timezoneOffset = weatherData!['timezone'] * 1000;
-          date = getLocalTime(date!);
+          weather = w; // set the weather object
+          weatherData = weather!.toJson(); // set the weather data as json
+          date = weather!.date; // set the date as the date of the weather
+          timezoneOffset = weatherData!['timezone'] * 1000; // set the timezone offset
+          date = getLocalTime(date!); // get the local time and reset date
         });
       });
+      // get the forecast data
       wf.fiveDayForecastByLocation(widget.cityLatLong[0],widget.cityLatLong[1]).then((f) {
         setState(() {
-          forecast = f;
+          forecast = f; // set the forecast data
         });
       });
     }
   }
 
-
-
+  // Build method for the widget
   @override
   Widget build(BuildContext context) {
 
+    // previous route is the weather route
     previousRoute = '/weather';
 
+    // if the weather and forecast data is not null
     if(!(weather == null || forecast == null)) {
+      // use will pop scope to handle the back button
       // ignore: deprecated_member_use
       return WillPopScope(
+        // on will pop get back and reload the previous route
         onWillPop: () async {
           Navigator.pop(context, 'reload');
           return true;
         },
+        // child of the will pop scope
         child: Scaffold(
+          // floating action button for the favourite button
           floatingActionButton: FloatingActionButton(
+            // on pressed function for the floating action button
             onPressed: () {
+              // if the city is not a favourite
               if(isFavourite!) {
-                isFavourite = false;
+                isFavourite = false; // set the city as not a favourite
+                // remove the city from the favourites list
                 for(var i in favouriteList) {
                   if(i[0] == widget.cityName) {
                     favouriteList.remove(i);
                     break;
                   }
                 }
-                favourites.put('favourites', favouriteList);
+                favourites.put('favourites', favouriteList); // update the favourites list
               } else {
-                isFavourite = true;
-                favouriteList.add([widget.cityName, widget.cityLatLong[0], widget.cityLatLong[1], getTemperatureForWeather(weather!)['current'], weather!.weatherIcon]);
-                favourites.put('favourites', favouriteList);
+                // if the city is not a favourite
+                isFavourite = true; // set the city as a favourite
+                favouriteList.add([widget.cityName, widget.cityLatLong[0], widget.cityLatLong[1], getTemperatureForWeather(weather!)['current'], weather!.weatherIcon]); // add the city to the favourites list
+                favourites.put('favourites', favouriteList); // update the favourites list
               }
               setState(() {
-                favoriteIcon = isFavourite! ? Icons.favorite : Icons.favorite_border;
+                favoriteIcon = isFavourite! ? Icons.favorite : Icons.favorite_border; // set the icon as a favourite icon if the city is a favourite, else set it as a not favourite icon
               });
-              setState(() => {});
+              setState(() => {}); // refresh the page
             },
-            backgroundColor: themeData[currentSettings['theme']]!['accent'],
-            foregroundColor: themeData[currentSettings['theme']]!['text'],
-            child: Icon(favoriteIcon),
+            backgroundColor: themeData[currentSettings['theme']]!['accent'], // set the background color of the floating action button
+            foregroundColor: themeData[currentSettings['theme']]!['text'], // set the foreground color of the floating action button
+            child: Icon(favoriteIcon), // set the icon of the floating action button
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // set the location of the floating action button
           appBar: AppBar(
+            // icon button for the back button
             leading: IconButton(
               padding: EdgeInsets.only(
-                left: 15.0 * widthFactor
+                left: 15.0 * widthFactor // padding of the icon button
               ),
               icon: Icon(
-                Icons.arrow_back,
+                Icons.arrow_back, // icon of the icon button
                 color: themeData[currentSettings['theme']]!['text'],
                 size: 30.0 * heightFactor,
               ),
               onPressed: () {
+                // on pressed, pop the context and reload the previous route
                 Navigator.pop(context, 'reload');
               },
             ),
-            elevation: 4.0,
-            shadowColor: themeData[currentSettings['theme']]!['shadow'],
+            elevation: 4.0, // elevation of the app bar
+            shadowColor: themeData[currentSettings['theme']]!['shadow'], // shadow color of the app bar
             actions: [
+              // icon button for the settings button
               IconButton(
                 padding: EdgeInsets.only(
                   right: 15.0 * widthFactor
@@ -423,13 +439,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   size: 30.0 * heightFactor,
                 ),
                 onPressed: () async {
+                  // on pressed, push the settings route and get the result
                   var result = await Navigator.pushNamed(context, '/settings');
                   if(result == 'themeChanged') {
+                    // refresh the page if the theme is changed
                     setState(() {});
                   }
                 },
               ),
             ],
+            // title of the app bar
             title: Center(
               child: Text(
                 'Weather', 
@@ -441,11 +460,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 )
               ),
             ),
-            backgroundColor: themeData[currentSettings['theme']]!['appBar'],
+            backgroundColor: themeData[currentSettings['theme']]!['appBar'], // background color of the app bar
           ),
-        
+
+          // body of the scaffold which is a single child scroll view so the page can be scrolled
           body: SingleChildScrollView(
             child: Column(
+              // alignment of the children
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 // Place Name and Date Time
@@ -454,8 +475,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     // Place Name
                     Expanded(
                       child: Container(
+                        // width and height of the container
                         width: deviceWidth * 0.50,
                         height: deviceHeight * 0.1,
+                        // padding and margin of the container
                         padding: EdgeInsets.only(
                           top: 5.0 * heightFactor,
                           bottom: 5.0 * heightFactor,
@@ -468,6 +491,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           left: 10.0 * widthFactor, 
                           right: 5.0 * widthFactor
                         ),
+                        // decoration of the container
                         decoration: BoxDecoration(
                           color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(10.0),
@@ -477,44 +501,50 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           ),
                         ),
                         child: Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // City Name
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Text(
-                                  widget.cityName.split(', ')[0],
-                                  style: TextStyle(
-                                    color: themeData[currentSettings['theme']]!['text'],
-                                    fontSize: 24.0 * heightFactor,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Fredoka'
+                          child: SingleChildScrollView(
+                            child: Column(
+                              // alignment of the children
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // City Name
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(
+                                    widget.cityName.split(', ')[0], // get the city name
+                                    style: TextStyle(
+                                      color: themeData[currentSettings['theme']]!['text'],
+                                      fontSize: 24.0 * heightFactor,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Fredoka'
+                                    ),
                                   ),
                                 ),
-                              ),
-                              // Rest of the "address" and country name
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Text(
-                                  makeBetter2ndAddress(widget.cityName.split(', ').getRange(1, widget.cityName.split(', ').length).join(', ')),
-                                  style: TextStyle(
-                                    color: themeData[currentSettings['theme']]!['text'],
-                                    fontSize: 16.0 * heightFactor,
-                                    fontFamily: 'Fredoka'
+                                // Rest of the "address" and country name
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(
+                                    makeBetter2ndAddress(widget.cityName.split(', ').getRange(1, widget.cityName.split(', ').length).join(', ')), // get the rest of the address
+                                    style: TextStyle(
+                                      color: themeData[currentSettings['theme']]!['text'],
+                                      fontSize: 16.0 * heightFactor,
+                                      fontFamily: 'Fredoka'
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
+                    // Date and Time
                     Expanded(
                       child: Container(
+                        // width and height of the container
                         width: deviceWidth * 0.40,
                         height: deviceHeight * 0.1,
+                        // padding and margin of the container
                         padding: EdgeInsets.only(
                           top: 10.0 * heightFactor,
                           bottom: 10.0 * heightFactor,
@@ -527,6 +557,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           bottom: 5.0 * heightFactor, 
                           right: 10.0 * widthFactor
                         ),
+                        // decoration of the container
                         decoration: BoxDecoration(
                           color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(10.0),
@@ -536,75 +567,87 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           ),
                         ),
                         child: Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Text(
-                                  weekdays[date!.weekday].toUpperCase() ?? "",
-                                  style: TextStyle(
-                                    color: themeData[currentSettings['theme']]!['text'],
-                                    fontSize: 16.0 * heightFactor,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Fredoka'
+                          child: SingleChildScrollView(
+                            child: Column(
+                              // alignment of the children
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Weekday
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(
+                                    weekdays[date!.weekday].toUpperCase() ?? "", // get the weekday
+                                    style: TextStyle(
+                                      color: themeData[currentSettings['theme']]!['text'],
+                                      fontSize: 16.0 * heightFactor,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Fredoka'
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                height: 1.0 * heightFactor,
-                                color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                                width: deviceWidth * 0.30,
-                              ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      makeReadableDate(date!),
-                                      style: TextStyle(
-                                        color: themeData[currentSettings['theme']]!['text'],
-                                        fontSize: 14.0 * heightFactor,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Fredoka'
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        left: 5.0 * widthFactor,
-                                        right: 5.0 * widthFactor
-                                      ),
-                                      width: 1.0 * widthFactor,
-                                      color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                                      height: 20.0 * heightFactor,
-                                    ),
-                                    Text(
-                                      makeReadableTIme(date!),
-                                      style: TextStyle(
-                                        color: themeData[currentSettings['theme']]!['text'],
-                                        fontSize: 14.0 * heightFactor,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Fredoka'
-                                      ),
-                                    ),
-                                  ],
+                                // divider
+                                Container(
+                                  height: 1.0 * heightFactor,
+                                  color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                  width: deviceWidth * 0.30,
                                 ),
-                              ),
-                            ],
+                                // Date and Time
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Date
+                                      Text(
+                                        makeReadableDate(date!), // get the readable date
+                                        style: TextStyle(
+                                          color: themeData[currentSettings['theme']]!['text'],
+                                          fontSize: 14.0 * heightFactor,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
+                                        ),
+                                      ),
+                                      // divider
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                          left: 5.0 * widthFactor,
+                                          right: 5.0 * widthFactor
+                                        ),
+                                        width: 1.0 * widthFactor,
+                                        color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                        height: 20.0 * heightFactor,
+                                      ),
+                                      // Time
+                                      Text(
+                                        makeReadableTIme(date!), // get the readable time
+                                        style: TextStyle(
+                                          color: themeData[currentSettings['theme']]!['text'],
+                                          fontSize: 14.0 * heightFactor,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                // Temparature Data
+                // Temparature Data and Weather Icon and Description
                 Row(
                   children: [
+                    // Temperature Data
                     Container(
+                      // width and height of the container
                       width: deviceWidth * 0.47,
                       height: deviceHeight * 0.17,
+                      // padding and margin of the container
                       padding: EdgeInsets.only(
                         top: 10.0 * heightFactor,
                         bottom: 10.0 * heightFactor,
@@ -617,6 +660,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         left: 10.0 * widthFactor, 
                         right: 5.0 * widthFactor
                       ),
+                      // decoration of the container
                       decoration: BoxDecoration(
                         color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(10.0),
@@ -626,110 +670,126 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         ),
                       ),
                       child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Text(
-                                getTemperatureForWeather(weather!)['current']!,
-                                style: TextStyle(
-                                  color: themeData[currentSettings['theme']]!['text'],
-                                  fontSize: 48.0 * heightFactor,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Fredoka'
+                        child: SingleChildScrollView(
+                          child: Column(
+                            // alignment of the children
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Current Temperature
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(
+                                  getTemperatureForWeather(weather!)['current']!, // get the current temperature for the weather
+                                  style: TextStyle(
+                                    color: themeData[currentSettings['theme']]!['text'],
+                                    fontSize: 48.0 * heightFactor,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Fredoka'
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              height: 1.0 * heightFactor,
-                              color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                              width: deviceWidth * 0.25,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Minimum',
-                                        style: TextStyle(
-                                          color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Fredoka'
-                                        ),
+                              // divider
+                              Container(
+                                height: 1.0 * heightFactor,
+                                color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                width: deviceWidth * 0.25,
+                              ),
+                              // Min, Max and Feels Like Temperatures
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  // alignment of the children
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // Min, Max and Feels Like Temperatures Labels
+                                    SingleChildScrollView(
+                                      child: Column(
+                                        // alignment of the children
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Minimum', // minimum temperature label
+                                            style: TextStyle(
+                                              color: themeData[currentSettings['theme']]!['text'],
+                                              fontSize: 16.0 * heightFactor,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Fredoka'
+                                            ),
+                                          ),
+                                          Text(
+                                            'Maximum', // maximum temperature label
+                                            style: TextStyle(
+                                              color: themeData[currentSettings['theme']]!['text'],
+                                              fontSize: 16.0 * heightFactor,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Fredoka'
+                                            ),
+                                          ),
+                                          Text(
+                                            'Feels Like', // feels like temperature label
+                                            style: TextStyle(
+                                              color: themeData[currentSettings['theme']]!['text'],
+                                              fontSize: 16.0 * heightFactor,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Fredoka'
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        'Maximum',
-                                        style: TextStyle(
-                                          color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Fredoka'
-                                        ),
+                                    ),
+                                    // Spacing between the labels and the values
+                                    Container(
+                                      width: 10.0 * widthFactor,
+                                    ),
+                                    // Min, Max and Feels Like Temperatures Values
+                                    SingleChildScrollView(
+                                      child: Column(
+                                        // alignment of the children
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '${getTemperatureForWeather(weather!)['min']}', // minimum temperature value
+                                            style: TextStyle(
+                                              color: themeData[currentSettings['theme']]!['text'],
+                                              fontSize: 15.0 * heightFactor,
+                                              fontFamily: 'Fredoka'
+                                            ),
+                                          ),
+                                          Text(
+                                            '${getTemperatureForWeather(weather!)['max']}', // maximum temperature value
+                                            style: TextStyle(
+                                              color: themeData[currentSettings['theme']]!['text'],
+                                              fontSize: 15.0 * heightFactor,
+                                              fontFamily: 'Fredoka'
+                                            ),
+                                          ),
+                                          Text(
+                                            '${getTemperatureForWeather(weather!)['feels_like']}', // feels like temperature value
+                                            style: TextStyle(
+                                              color: themeData[currentSettings['theme']]!['text'],
+                                              fontSize: 15.0 * heightFactor,
+                                              fontFamily: 'Fredoka'
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        'Feels Like',
-                                        style: TextStyle(
-                                          color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Fredoka'
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
-                                Container(
-                                  width: 10.0 * widthFactor,
-                                ),
-                                SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        '${getTemperatureForWeather(weather!)['min']}',
-                                        style: TextStyle(
-                                          color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 15.0 * heightFactor,
-                                          fontFamily: 'Fredoka'
-                                        ),
-                                      ),
-                                      Text(
-                                        '${getTemperatureForWeather(weather!)['max']}',
-                                        style: TextStyle(
-                                          color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 15.0 * heightFactor,
-                                          fontFamily: 'Fredoka'
-                                        ),
-                                      ),
-                                      Text(
-                                        '${getTemperatureForWeather(weather!)['feels_like']}',
-                                        style: TextStyle(
-                                          color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 15.0 * heightFactor,
-                                          fontFamily: 'Fredoka'
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     // Weather Icon and Description
                     Expanded(
                       child: Container(
+                        // margin and padding of the container
                         margin: EdgeInsets.only(
                           top: 5.0 * heightFactor, 
                           bottom: 5.0 * heightFactor, 
@@ -742,7 +802,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           left: 10.0 * widthFactor,
                           right: 10.0 * widthFactor,
                         ),
+                        // height of the container
                         height: deviceHeight * 0.17,
+                        // decoration of the container
                         decoration: BoxDecoration(
                           color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(10.0),
@@ -751,33 +813,37 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             width: 2.0 * widthFactor,
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            // Used the network image requirement ;)
-                            Image.network(
-                              'http://openweathermap.org/img/wn/${weather!.weatherIcon}@2x.png',
-                              height: deviceHeight * 0.10,
-                              width: deviceWidth * 0.3,
-                              fit: BoxFit.scaleDown,
-                            ),
-                            Container(
-                              height: 1.0 * heightFactor,
-                              color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                              width: deviceWidth * 0.5,
-                            ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Text(
-                                '${weather!.weatherDescription}'.capitalize(),
-                                style: TextStyle(
-                                  color: themeData[currentSettings['theme']]!['text'],
-                                  fontSize: 20.0 * heightFactor,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Fredoka'
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              // Weather Icon
+                              Image.network(
+                                'http://openweathermap.org/img/wn/${weather!.weatherIcon}@2x.png',
+                                height: deviceHeight * 0.10,
+                                width: deviceWidth * 0.3,
+                                fit: BoxFit.scaleDown,
+                              ),
+                              // divider
+                              Container(
+                                height: 1.0 * heightFactor,
+                                color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                width: deviceWidth * 0.5,
+                              ),
+                              // Weather Description
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(
+                                  '${weather!.weatherDescription}'.capitalize(),
+                                  style: TextStyle(
+                                    color: themeData[currentSettings['theme']]!['text'],
+                                    fontSize: 20.0 * heightFactor,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Fredoka'
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     )
@@ -785,8 +851,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 ),
                 // Wind Data
                 Container(
+                  // width and height of the container
                   width: deviceWidth - (20.0 * widthFactor),
-                  height: deviceHeight * 0.13,
+                  height: deviceHeight * 0.17,
+                  // padding and margin of the container
                   padding: EdgeInsets.only(
                     top: 10.0 * heightFactor,
                     bottom: 10.0 * heightFactor,
@@ -799,6 +867,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     left: 10.0 * widthFactor, 
                     right: 10.0 * widthFactor
                   ),
+                  // decoration of the container
                   decoration: BoxDecoration(
                     color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(10.0),
@@ -808,136 +877,236 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                   ),
                   child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
+                    child: SingleChildScrollView(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Column(
+                          // alignment of the children
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: deviceWidth * 0.66,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        'Wind',
-                                        style: TextStyle(
-                                          color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 20.0 * heightFactor,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Fredoka'
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 1.0 * heightFactor,
-                                      color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                                      width: deviceWidth * 0.66,
-                                    ),
-                                    Row(
+                            Row(
+                              children: [
+                                // Wind data
+                                SizedBox(
+                                  width: deviceWidth * 0.66,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      // alignment of the children
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Speed',
-                                              style: TextStyle(
-                                                color: themeData[currentSettings['theme']]!['text'],
-                                                fontSize: 16.0 * heightFactor,
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: 'Fredoka'
-                                              ),
+                                        // Wind Title
+                                        Center(
+                                          child: Text(
+                                            'Wind',
+                                            style: TextStyle(
+                                              color: themeData[currentSettings['theme']]!['text'],
+                                              fontSize: 20.0 * heightFactor,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Fredoka'
                                             ),
-                                            Text(
-                                              'Direction',
-                                              style: TextStyle(
-                                                color: themeData[currentSettings['theme']]!['text'],
-                                                fontSize: 16.0 * heightFactor,
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: 'Fredoka'
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
+                                        // divider
                                         Container(
-                                          width: 30.0 * widthFactor,
+                                          height: 1.0 * heightFactor,
+                                          color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                          width: deviceWidth * 0.66,
                                         ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${getWindSpeedForWeather(weather!).toStringAsFixed(2)} ${windspeeds[currentSettings['wind_speed']]}',
-                                              style: TextStyle(
-                                                color: themeData[currentSettings['theme']]!['text'],
-                                                fontSize: 15.0 * heightFactor,
-                                                fontFamily: 'Fredoka'
+                                        // Wind Speed and Direction
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: [
+                                              // Wind Speed and Direction Labels
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Speed', // wind speed label
+                                                    style: TextStyle(
+                                                      color: themeData[currentSettings['theme']]!['text'],
+                                                      fontSize: 16.0 * heightFactor,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: 'Fredoka'
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Direction', // wind direction label
+                                                    style: TextStyle(
+                                                      color: themeData[currentSettings['theme']]!['text'],
+                                                      fontSize: 16.0 * heightFactor,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontFamily: 'Fredoka'
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                            Text(
-                                              '${weather!.windDegree!.toStringAsFixed(0)}°',
-                                              style: TextStyle(
-                                                color: themeData[currentSettings['theme']]!['text'],
-                                                fontSize: 15.0 * heightFactor,
-                                                fontFamily: 'Fredoka'
+                                              // Spacing between the labels and the values
+                                              Container(
+                                                width: 30.0 * widthFactor,
                                               ),
+                                              // Wind Speed and Direction Values
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${getWindSpeedForWeather(weather!).toStringAsFixed(2)} ${windspeeds[currentSettings['wind_speed']]}', // wind speed value
+                                                    style: TextStyle(
+                                                      color: themeData[currentSettings['theme']]!['text'],
+                                                      fontSize: 15.0 * heightFactor,
+                                                      fontFamily: 'Fredoka'
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${weather!.windDegree!.toStringAsFixed(0)}° From South', // wind direction value
+                                                    style: TextStyle(
+                                                      color: themeData[currentSettings['theme']]!['text'],
+                                                      fontSize: 15.0 * heightFactor,
+                                                      fontFamily: 'Fredoka'
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // divider
+                                        Container(
+                                          height: 1.0 * heightFactor,
+                                          color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                          width: deviceWidth * 0.66,
+                                        ),
+                                        // Wind Direction Reading
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Text(
+                                            windDegreesToReadable(weather!.windDegree!), // wind direction reading
+                                            style: TextStyle(
+                                              color: themeData[currentSettings['theme']]!['text'],
+                                              fontSize: 16.0 * heightFactor,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Fredoka'
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    Container(
-                                      height: 1.0 * heightFactor,
-                                      color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                                      width: deviceWidth * 0.66,
+                                  ),
+                                ),
+                                // Wind Direction Icon
+                                Column(
+                                  children: [
+                                    // Marking North direction
+                                    Text(
+                                      'N',
+                                      style: TextStyle(
+                                        color: themeData[currentSettings['theme']]!['text'],
+                                        fontSize: 10.0 * heightFactor,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Fredoka'
+                                      ),
                                     ),
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Text(
-                                        windDegreesToReadable(weather!.windDegree!),
-                                        style: TextStyle(
-                                          color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 16.0 * heightFactor,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'Fredoka'
+                                    Row(
+                                      children: [
+                                        // Marking West direction
+                                        Text(
+                                          'W',
+                                          style: TextStyle(
+                                            color: themeData[currentSettings['theme']]!['text'],
+                                            fontSize: 10.0 * heightFactor,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Fredoka'
+                                          ),
                                         ),
+                                        // Wind Direction Icon
+                                        // Circle Avatar used to make the icon circular
+                                        CircleAvatar(
+                                          backgroundColor: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.1),
+                                          radius: 0.1 * deviceWidth,
+                                          // Container used to add border
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(45.0),
+                                              border: Border.all(
+                                                color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.4),
+                                                width: 1.0 * widthFactor,
+                                              ),
+                                            ),
+                                            // Transform.rotate used to rotate the icon to the wind direction
+                                            child: Transform.rotate(
+                                              angle: ((weather!.windDegree!) * math.pi / 180.0) + math.pi, // angle of the rotation of the icon
+                                              child: ShaderMask(
+                                                // Shader mask used to add gradient to the icon
+                                                shaderCallback: (Rect bounds) {
+                                                  // LinearGradient returned to create the gradient
+                                                  return LinearGradient(
+                                                    // Start and end points of the gradient
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                    // Colors of the gradient
+                                                    colors: [
+                                                      themeData
+                                                        [currentSettings['theme']]!
+                                                        ['main_body_background']!
+                                                        .withBlue(250)
+                                                        .withGreen(255)
+                                                        .withOpacity(0.7),
+                                                      themeData[currentSettings['theme']]!['accent']!
+                                                    ],
+                                                    // Stops of the gradient
+                                                    stops: const [0.0, 0.8],
+                                                  ).createShader(bounds);
+                                                },
+                                                // Weather Icon
+                                                child: Icon(
+                                                  Icons.navigation, 
+                                                  size: 90.0 * heightFactor,
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            ),
+                                          ),
+                                        ),
+                                        // Marking East direction
+                                        Text(
+                                          'E',
+                                          style: TextStyle(
+                                            color: themeData[currentSettings['theme']]!['text'],
+                                            fontSize: 10.0 * heightFactor,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Fredoka'
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Marking South direction
+                                    Text(
+                                      'S',
+                                      style: TextStyle(
+                                        color: themeData[currentSettings['theme']]!['text'],
+                                        fontSize: 10.0 * heightFactor,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Fredoka'
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(45.0),
-                                border: Border.all(
-                                  color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                                  width: 1.0 * widthFactor,
-                                ),
-                              ),
-                              child: Center(
-                                child: Transform.rotate(
-                                  angle: ((weather!.windDegree!) * math.pi / 180.0) + math.pi, 
-                                  child: Icon(
-                                    Icons.navigation, 
-                                    size: 90.0 * heightFactor, 
-                                    color: const Color.fromARGB(255, 139, 73, 11),
-                                  )
-                                ),
-                              ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
+                // Sunrise, Sunset and Daylight Time, and Humidity, Pressure and Visibility Data
                 Row(
                   children: [
+                    // Sunrise, Sunset and Daylight Time
                     Container(
+                      // decoration of the container
                       decoration: BoxDecoration(
                         color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(10.0),
@@ -946,6 +1115,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           width: 2.0 * widthFactor,
                         ),
                       ),
+                      // margin and padding of the container
                       margin: EdgeInsets.only(
                         top: 5.0 * heightFactor,
                         bottom: 5.0 * heightFactor,
@@ -958,119 +1128,62 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         left: 10.0 * widthFactor,
                         right: 10.0 * widthFactor,
                       ),
+                      // width and height of the container
                       height: deviceHeight * 0.15,
                       width: deviceWidth * 0.52,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Sunrise',
-                                      style: TextStyle(
-                                        color: themeData[currentSettings['theme']]!['text'],
-                                        fontSize: 18.0 * heightFactor,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Fredoka'
-                                      ),
-                                    ),
-                                    Text(
-                                      'Sunset',
-                                      style: TextStyle(
-                                        color: themeData[currentSettings['theme']]!['text'],
-                                        fontSize: 18.0 * heightFactor,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Fredoka'
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  width: 15.0 * widthFactor,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      makeReadableTIme(getLocalTime(weather!.sunrise!)),
-                                      style: TextStyle(
-                                        color: themeData[currentSettings['theme']]!['text'],
-                                        fontSize: 15.0 * heightFactor,
-                                        fontFamily: 'Fredoka'
-                                      ),
-                                    ),
-                                    Text(
-                                      makeReadableTIme(getLocalTime(weather!.sunset!)),
-                                      style: TextStyle(
-                                        color: themeData[currentSettings['theme']]!['text'],
-                                        fontSize: 15.0 * heightFactor,
-                                        fontFamily: 'Fredoka'
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  width: 15.0 * widthFactor,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.wb_sunny,
-                                      color: const Color.fromARGB(255, 228, 228, 0),
-                                      size: 24.0 * heightFactor,
-                                    ),
-                                    Transform.rotate(
-                                      angle: math.pi * 1.75,
-                                      child: Icon(
-                                        Icons.nightlight_round,
-                                        color: const Color.fromARGB(255, 255, 255, 255),
-                                        size: 24.0 * heightFactor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 10.0 * heightFactor,
-                          ),
-                          Container(
-                            height: 1.0 * heightFactor,
-                            color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                            width: deviceWidth * 0.50,
-                          ),
-                          Container(
-                            height: 10.0 * heightFactor,
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          // alignment of the children
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  // Sunrise and Sunset Labels
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Total Daylight Time',
+                                        'Sunrise', // sunrise label
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
-                                          fontSize: 16.0 * heightFactor,
+                                          fontSize: 18.0 * heightFactor,
                                           fontWeight: FontWeight.w500,
                                           fontFamily: 'Fredoka'
                                         ),
                                       ),
                                       Text(
-                                        '${(weather!.sunset!.difference(weather!.sunrise!)).inHours} Hours ${(weather!.sunset!.difference(weather!.sunrise!)).inMinutes.remainder(60)} Minutes',
+                                        'Sunset', // sunset label
+                                        style: TextStyle(
+                                          color: themeData[currentSettings['theme']]!['text'],
+                                          fontSize: 18.0 * heightFactor,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'Fredoka'
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // Spacing between the labels and the values
+                                  Container(
+                                    width: 15.0 * widthFactor,
+                                  ),
+                                  // Sunrise and Sunset Values
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        makeReadableTIme(getLocalTime(weather!.sunrise!)), // sunrise value
+                                        style: TextStyle(
+                                          color: themeData[currentSettings['theme']]!['text'],
+                                          fontSize: 15.0 * heightFactor,
+                                          fontFamily: 'Fredoka'
+                                        ),
+                                      ),
+                                      Text(
+                                        makeReadableTIme(getLocalTime(weather!.sunset!)), // sunset value
                                         style: TextStyle(
                                           color: themeData[currentSettings['theme']]!['text'],
                                           fontSize: 15.0 * heightFactor,
@@ -1079,36 +1192,109 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       ),
                                     ],
                                   ),
-                                ),
-                                Container(
-                                  width: 15.0 * widthFactor,
-                                ),
-                                Icon(
-                                  Icons.wb_sunny,
-                                  color: const Color.fromARGB(255, 228, 228, 0),
-                                  size: 20.0 * heightFactor,
-                                ),
-                                Icon(
-                                  Icons.arrow_right_alt,
-                                  color: themeData[currentSettings['theme']]!['text'],
-                                  size: 20.0 * heightFactor,
-                                ),
-                                Transform.rotate(
-                                  angle: math.pi * 1.75,
-                                  child: Icon(
-                                    Icons.nightlight_round,
-                                    color: const Color.fromARGB(255, 255, 255, 255),
+                                  // Spacing between the values and the icons
+                                  Container(
+                                    width: 15.0 * widthFactor,
+                                  ),
+                                  // Sunrise and Sunset Icons
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        Icons.wb_sunny, // sunrise icon
+                                        color: const Color.fromARGB(255, 228, 228, 0),
+                                        size: 24.0 * heightFactor,
+                                      ),
+                                      // Make the moon icon rotate a bit to make it look like the stereotypical moon
+                                      Transform.rotate(
+                                        angle: math.pi * 1.75, // angle found through trial and error
+                                        child: Icon(
+                                          Icons.nightlight_round, // moon icon indicating sunset
+                                          color: const Color.fromARGB(255, 255, 255, 255),
+                                          size: 24.0 * heightFactor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // divider
+                            Container(
+                              margin: EdgeInsets.only(
+                                top: 10 * heightFactor,
+                                bottom: 10 * heightFactor
+                              ),
+                              height: 1.0 * heightFactor,
+                              color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                              width: deviceWidth * 0.50,
+                            ),
+                            // Total Daylight Time
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'Total Daylight Time', // daylight time label
+                                          style: TextStyle(
+                                            color: themeData[currentSettings['theme']]!['text'],
+                                            fontSize: 16.0 * heightFactor,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Fredoka'
+                                          ),
+                                        ),
+                                        Text(
+                                          '${(weather!.sunset!.difference(weather!.sunrise!)).inHours} Hours ${(weather!.sunset!.difference(weather!.sunrise!)).inMinutes.remainder(60)} Minutes', // Total daylight time value
+                                          style: TextStyle(
+                                            color: themeData[currentSettings['theme']]!['text'],
+                                            fontSize: 15.0 * heightFactor,
+                                            fontFamily: 'Fredoka'
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // Spacing between the values and the icons
+                                  Container(
+                                    width: 15.0 * widthFactor,
+                                  ),
+                                  // Daylight Time Icon (Sun)
+                                  Icon(
+                                    Icons.wb_sunny,
+                                    color: const Color.fromARGB(255, 228, 228, 0),
                                     size: 20.0 * heightFactor,
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                                  // Arrow Icon
+                                  Icon(
+                                    Icons.arrow_right_alt,
+                                    color: themeData[currentSettings['theme']]!['text'],
+                                    size: 20.0 * heightFactor,
+                                  ),
+                                  // Daylight Time Icon (Moon)
+                                  Transform.rotate(
+                                    angle: math.pi * 1.75,
+                                    child: Icon(
+                                      Icons.nightlight_round,
+                                      color: const Color.fromARGB(255, 255, 255, 255),
+                                      size: 20.0 * heightFactor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
+                    // Humidity, Pressure and Visibility Data
                     Expanded(
                       child: Container(
+                        // decoration of the container
                         decoration: BoxDecoration(
                           color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                           borderRadius: BorderRadius.circular(10.0),
@@ -1117,6 +1303,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             width: 2.0 * widthFactor,
                           ),
                         ),
+                        // margin and padding of the container
                         margin: EdgeInsets.only(
                           top: 5.0 * heightFactor,
                           bottom: 5.0 * heightFactor,
@@ -1129,15 +1316,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           left: 10.0 * widthFactor,
                           right: 10.0 * widthFactor,
                         ),
+                        // height of the container
                         height: deviceHeight * 0.15,
                         child: Column(
                           children: [
+                            // Humidity Data
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: [
+                                  // Humidity Label
                                   Text(
-                                    'Humidity',
+                                    'Humidity', // humidity label
                                     style: TextStyle(
                                       color: themeData[currentSettings['theme']]!['text'],
                                       fontSize: 18.0 * heightFactor,
@@ -1145,123 +1335,142 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                       fontFamily: 'Fredoka'
                                     ),
                                   ),
+                                  // spacing between label and value
                                   Container(
                                     width: 10.0 * widthFactor,
                                   ),
+                                  // Humidity Value
                                   Text(
-                                    '${weather!.humidity} %',
+                                    '${weather!.humidity} %', // humidity value
                                     style: TextStyle(
                                       color: themeData[currentSettings['theme']]!['text'],
                                       fontSize: 15.0 * heightFactor,
                                       fontFamily: 'Fredoka'
                                     ),
                                   ),
+                                  // spacing between value and icon
                                   Container(
                                     width: 5.0 * widthFactor,
                                   ),
+                                  // Humidity Icon
                                   Icon(
-                                    Icons.water_drop_rounded,
+                                    Icons.water_drop_rounded, // humidity icon
                                     color: const Color.fromARGB(255, 0, 0, 197),
                                     size: 30.0 * heightFactor,
                                   ),
                                 ],
                               ),
                             ),
+                            // divider
                             Container(
-                              height: 5.0 * heightFactor,
-                            ),
-                            Container(
+                              margin: EdgeInsets.only(
+                                top: 5 * heightFactor,
+                              ),
                               height: 1.0 * heightFactor,
                               color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
                               width: deviceWidth * 0.50,
                             ),
+                            // Pressure and Visibility Data
                             Expanded(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Text(
-                                            'Pressure',
-                                            style: TextStyle(
-                                              color: themeData[currentSettings['theme']]!['text'],
-                                              fontSize: 18.0 * heightFactor,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'Fredoka'
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  // alignment of the children
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // Pressure Data
+                                    SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          // Pressure Label
+                                          SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Text(
+                                              'Pressure', // pressure label
+                                              style: TextStyle(
+                                                color: themeData[currentSettings['theme']]!['text'],
+                                                fontSize: 18.0 * heightFactor,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Fredoka'
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Text(
-                                            convertPressure(weather!.pressure!),
-                                            style: TextStyle(
-                                              color: themeData[currentSettings['theme']]!['text'],
-                                              fontSize: 15.0 * heightFactor,
-                                              fontFamily: 'Fredoka'
+                                          // Pressure Value
+                                          SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Text(
+                                              convertPressure(weather!.pressure!), // pressure value
+                                              style: TextStyle(
+                                                color: themeData[currentSettings['theme']]!['text'],
+                                                fontSize: 15.0 * heightFactor,
+                                                fontFamily: 'Fredoka'
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Icon(
-                                          Icons.speed_rounded,
-                                          color: const Color.fromARGB(255, 177, 0, 0),
-                                          size: 30.0 * heightFactor,
-                                        ),
-                                      ],
+                                          // Pressure Icon
+                                          Icon(
+                                            Icons.speed_rounded, // pressure icon
+                                            color: const Color.fromARGB(255, 177, 0, 0),
+                                            size: 30.0 * heightFactor,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: 1.0 * widthFactor,
-                                    color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                                    height: 100.0 * heightFactor,
-                                    margin: EdgeInsets.only(
-                                      left: 10.0 * widthFactor,
-                                      right: 10.0 * widthFactor
+                                    // divider
+                                    Container(
+                                      width: 1.0 * widthFactor,
+                                      color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                      height: 100.0 * heightFactor,
+                                      margin: EdgeInsets.only(
+                                        left: 10.0 * widthFactor,
+                                        right: 10.0 * widthFactor
+                                      ),
                                     ),
-                                  ),
-                                  SingleChildScrollView(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Text(
-                                            'Visibility',
-                                            style: TextStyle(
-                                              color: themeData
-                                              [currentSettings['theme']]!['text'],
-                                              fontSize: 18.0 * heightFactor,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'Fredoka'
+                                    // Visibility Data
+                                    SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          // Visibility Label
+                                          SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Text(
+                                              'Visibility', // visibility label
+                                              style: TextStyle(
+                                                color: themeData
+                                                [currentSettings['theme']]!['text'],
+                                                fontSize: 18.0 * heightFactor,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Fredoka'
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Text(
-                                            convertVisibility(weatherData!['visibility']),
-                                            style: TextStyle(
-                                              color: themeData[currentSettings['theme']]!['text'],
-                                              fontSize: 15.0 * heightFactor,
-                                              fontFamily: 'Fredoka'
+                                          // Visibility Value
+                                          SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Text(
+                                              convertVisibility(weatherData!['visibility']), // visibility value
+                                              style: TextStyle(
+                                                color: themeData[currentSettings['theme']]!['text'],
+                                                fontSize: 15.0 * heightFactor,
+                                                fontFamily: 'Fredoka'
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Icon(
-                                          Icons.visibility,
-                                          color: const Color.fromARGB(255, 0, 138, 0),
-                                          size: 30.0 * heightFactor,
-                                        ),
-                                      ],
+                                          // Visibility Icon
+                                          Icon(
+                                            Icons.visibility, // visibility icon
+                                            color: const Color.fromARGB(255, 0, 138, 0),
+                                            size: 30.0 * heightFactor,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ]
@@ -1270,10 +1479,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     )
                   ],
                 ),
-                // Forecast
+                // Forecast for the next 24 hours
                 Container(
+                  // width and height of the container
                   width: deviceWidth - (20.0 * widthFactor),
                   height: deviceHeight * 0.20,
+                  // container decoration
                   decoration: BoxDecoration(
                     color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(10.0),
@@ -1282,6 +1493,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       width: 2.0 * widthFactor,
                     ),
                   ),
+                  // margin and padding of the container
                   margin: EdgeInsets.only(
                     top: 5.0 * heightFactor,
                     bottom: 5.0 * heightFactor,
@@ -1294,108 +1506,123 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     left: 5.0 * widthFactor,
                     right: 5.0 * widthFactor,
                   ),
-                  child: Column(
-                    children: [
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Text(
-                          'Next 24 Hours Forecast for Every 3 Hours',
-                          style: TextStyle(
-                            color: themeData[currentSettings['theme']]!['text'],
-                            fontSize: 16.0 * heightFactor,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Fredoka'
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Forecast Title
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Text(
+                            'Next 24 Hours Forecast for Every 3 Hours', // forecast title
+                            style: TextStyle(
+                              color: themeData[currentSettings['theme']]!['text'],
+                              fontSize: 16.0 * heightFactor,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Fredoka'
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        height: 2.0 * heightFactor,
-                        width: deviceWidth - (20.0 * widthFactor),
-                        margin: EdgeInsets.only(
-                          top: 5.0 * heightFactor,
-                          bottom: 5.0 * heightFactor,
-                        )
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            for(var i in forecast!.getRange(0, 8))
-                              Container(
-                                width: deviceWidth * 0.20,
-                                height: deviceHeight * 0.14,
-                                margin: EdgeInsets.only(
-                                  left: 5.0 * widthFactor,
-                                  right: 5.0 * widthFactor,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  border: Border.all(
-                                    color: themeData[currentSettings['theme']]!['accent']!,
-                                    width: 2.0 * widthFactor,
+                        // divider
+                        Container(
+                          height: 2.0 * heightFactor,
+                          width: deviceWidth - (20.0 * widthFactor),
+                          margin: EdgeInsets.only(
+                            top: 5.0 * heightFactor,
+                            bottom: 5.0 * heightFactor,
+                          )
+                        ),
+                        // Forecast Data
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              // Forecast Data for every 3 hours added on loop
+                              for(var i in forecast!.getRange(0, 8))
+                                Container(
+                                  // width and height of the container
+                                  width: deviceWidth * 0.20,
+                                  height: deviceHeight * 0.14,
+                                  margin: EdgeInsets.only(
+                                    left: 5.0 * widthFactor,
+                                    right: 5.0 * widthFactor,
                                   ),
-                                ),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Text(
-                                          '${getTemperatureForWeather(i)['current']}',
-                                          style: TextStyle(
-                                            color: themeData[currentSettings['theme']]!['text'],
-                                            fontSize: 20.0 * heightFactor,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: 'Fredoka'
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 1.0 * heightFactor,
-                                        color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                                        width: deviceWidth * 0.20,
-                                      ),
-                                      SizedBox(
-                                        height: 80.0 * heightFactor,
-                                        child: Image.network(
-                                          'http://openweathermap.org/img/wn/${i.weatherIcon}@4x.png',
-                                          fit: BoxFit.scaleDown,
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 1.0 * heightFactor,
-                                        color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
-                                        width: deviceWidth * 0.20,
-                                      ),
-                                      SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Center(
+                                  // decoration of the container
+                                  decoration: BoxDecoration(
+                                    color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    border: Border.all(
+                                      color: themeData[currentSettings['theme']]!['accent']!,
+                                      width: 2.0 * widthFactor,
+                                    ),
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      // alignment of the children
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        // Temperature Data
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
                                           child: Text(
-                                            makeReadableTIme(getLocalTime(i.date!)),
+                                            '${getTemperatureForWeather(i)['current']}', // temperature value
                                             style: TextStyle(
                                               color: themeData[currentSettings['theme']]!['text'],
-                                              fontSize: 14.0 * heightFactor,
+                                              fontSize: 20.0 * heightFactor,
                                               fontWeight: FontWeight.w500,
                                               fontFamily: 'Fredoka'
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        // divider
+                                        Container(
+                                          height: 1.0 * heightFactor,
+                                          color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                          width: deviceWidth * 0.20,
+                                        ),
+                                        // Weather Icon
+                                        SizedBox(
+                                          height: 80.0 * heightFactor,
+                                          child: Image.network(
+                                            'http://openweathermap.org/img/wn/${i.weatherIcon}@4x.png',
+                                            fit: BoxFit.scaleDown,
+                                          ),
+                                        ),
+                                        // divider
+                                        Container(
+                                          height: 1.0 * heightFactor,
+                                          color: themeData[currentSettings['theme']]!['text']!.withOpacity(0.5),
+                                          width: deviceWidth * 0.20,
+                                        ),
+                                        // Time of the Forecast
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Center(
+                                            child: Text(
+                                              makeReadableTIme(getLocalTime(i.date!)), // time of the forecast
+                                              style: TextStyle(
+                                                color: themeData[currentSettings['theme']]!['text'],
+                                                fontSize: 14.0 * heightFactor,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'Fredoka'
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 // Forecast for 5 days ahead
                 Container(
+                  // margin and padding of the container
                   margin: EdgeInsets.only(
                     top: 5.0 * heightFactor,
                     bottom: 10.0 * heightFactor,
@@ -1408,7 +1635,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     left: 5.0 * widthFactor,
                     right: 5.0 * widthFactor,
                   ),
+                  // width of the container
                   width: deviceWidth - (20.0 * widthFactor),
+                  // decoration of the container
                   decoration: BoxDecoration(
                     color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(10.0),
@@ -1417,17 +1646,22 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       width: 2.0 * widthFactor,
                     ),
                   ),
+                  // Forecast Title
                   child: ExpansionTile(
+                    // expansion tile properties (when collapsed)
                     collapsedShape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
+                    // expansion tile properties (when expanded)
                     expandedAlignment: Alignment.center,
+                    // shape of the expansion tile
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     trailing: const SizedBox.shrink(),
+                    // title of the expansion tile
                     title: Text(
-                      'Next 4 Days Forecast', 
+                      'Next 4 Days Forecast', // forecast title
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontSize: 16.0 * widthFactor,
@@ -1435,19 +1669,23 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         fontFamily: 'Fredoka'
                       )
                     ),
-                    initiallyExpanded: true,
+                    initiallyExpanded: true, // initially expanded
+                    // leading icon of the expansion tile
                     leading: Icon(
-                      Icons.calendar_today,
+                      Icons.calendar_today, // calendar icon indicating forecast
                       color: themeData[currentSettings['theme']]!['text'],
-                    ), // Customize leading icon as needed
+                    ),
+                    // children of the expansion tile
                     children: <Widget>[
+                      // Forecast Data for the next 4 days with padding
                       Padding(
                         padding: EdgeInsets.only(
                           left: 10.0 * widthFactor,
                           right: 10.0 * widthFactor,
                         ),
+                        // Forecast Data for the next 4 days
                         child: Column(
-                          children: get4DayForecastViewer(forecast!), // Assuming this returns a list of Widgets
+                          children: get4DayForecastViewer(forecast!), // get the forecast for the next 4 days
                         ),
                       ),
                     ],
@@ -1456,22 +1694,24 @@ class _WeatherScreenState extends State<WeatherScreen> {
               ],
             ),
           ),
-          backgroundColor: themeData[currentSettings['theme']]!['main_body_background'],
+          backgroundColor: themeData[currentSettings['theme']]!['main_body_background'], // background color of the body
         ),
       );
     } else {
+      // Loading Screen
       // ignore: deprecated_member_use
       return WillPopScope(
+        // will pop scope used to handle the back button press
         onWillPop: () async {
-          Navigator.pop(context);
+          Navigator.pop(context, 'reload');
           return true;
         },
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            automaticallyImplyLeading: false, // do not show the back button
             title: Center(
               child: Text(
-                'Loading',
+                'Loading', // loading text
                 style: TextStyle(
                   color: themeData[currentSettings['theme']]!['text'],
                   fontSize: 30.0 * heightFactor,
@@ -1480,19 +1720,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 )
               ),
             ),
-            shadowColor: themeData[currentSettings['theme']]!['shadow'],
-            elevation: 4.0,
-            backgroundColor: themeData[currentSettings['theme']]!['appBar'],
+            shadowColor: themeData[currentSettings['theme']]!['shadow'], // shadow color of the app bar
+            elevation: 4.0, // elevation of the app bar
+            backgroundColor: themeData[currentSettings['theme']]!['appBar'], // background color of the app bar
           ),
-          body: Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(themeData[currentSettings['theme']]!['accent']!),
-            ),
+          // body of the loading screen with a circular progress indicator
+          body: const Center(
+            child: CircularProgressIndicator(),
           ),
-          backgroundColor: themeData[currentSettings['theme']]!['main_body_background'],
+          backgroundColor: themeData[currentSettings['theme']]!['main_body_background'], // background color of the body
         ),
       );
     }
-
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../allsettings.dart';
@@ -19,12 +21,18 @@ Future<bool> sendEmail(String name, String email, String text, String subject) a
   // Create a SMTP client (Simple Mail Transfer Protocol) for gmail
   final smtpServer = gmail(username, password);
 
+  String html = '<b>From:</b> $name<br><b>Subject:</b> $subject<br><b>Email:</b> $email<br><hr><p>$text</p>';
+
   // Create our message
   final message = Message()
     ..from = Address(email, name)
     ..recipients.add(Address(username, 'WeatherFull'))
     ..subject = subject
-    ..text = text;
+    ..headers = {
+      'X-Priority': '1',
+      'Importance': 'high',
+    }
+    ..html = html;
 
   // Send the message
   try {
@@ -545,6 +553,10 @@ class _ContactScreenState extends State<ContactScreen> {
                                 duration: const Duration(seconds: 2),
                               ),
                             );
+                            sleep(const Duration(seconds: 1));
+                            nameController.clear(); // clear the name field
+                            emailController.clear(); // clear the email field
+                            messageController.clear(); // clear the message field
                           } else {
                             // Show a snackbar if the email sending failed
                             ScaffoldMessenger.of(context).showSnackBar(

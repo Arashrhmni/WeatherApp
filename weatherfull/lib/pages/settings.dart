@@ -21,7 +21,6 @@ class SettingsWindow extends StatefulWidget {
 
 class _SettingsWindowState extends State<SettingsWindow> {
 
-
   @override
   Widget build(BuildContext context) {
     // ignore: deprecated_member_use
