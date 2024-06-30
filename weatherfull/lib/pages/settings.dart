@@ -2,9 +2,8 @@ import '../allsettings.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 var settings = Hive.box('settings');
-bool dark = settings.get('theme', defaultValue: 'light') == 'dark';
+bool isDark = settings.get('theme', defaultValue: theme) == 'dark';
 String windspeed = settings.get('wind_speed', defaultValue: 'meter-per-second');
 String temperature = settings.get('temperature', defaultValue: 'celcius');
 String timeFormat = settings.get('time_format', defaultValue: '24');
@@ -12,6 +11,7 @@ String dateFormat = settings.get('date_format', defaultValue: 'dmy');
 String pressure = settings.get('pressure', defaultValue: 'hPa');
 String visibility = settings.get('visibility', defaultValue: 'meters');
 
+// settings stateless widget
 class SettingsWindow extends StatefulWidget {
   const SettingsWindow({super.key});
 
@@ -21,10 +21,12 @@ class SettingsWindow extends StatefulWidget {
 
 class _SettingsWindowState extends State<SettingsWindow> {
 
+  // build method
   @override
   Widget build(BuildContext context) {
     // ignore: deprecated_member_use
     return WillPopScope(
+      // will pop scope for controlling the functionality of the back button
       onWillPop: () async {
         setState(() {});
         Navigator.pop(context, 'themeChanged');
@@ -32,27 +34,26 @@ class _SettingsWindowState extends State<SettingsWindow> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: themeData[currentSettings['theme']]!['appBar'],
-          shadowColor: themeData[currentSettings['theme']]!['shadow'],
-          elevation: 4.0,
+          backgroundColor: themeData[currentSettings['theme']]!['appBar'], // appbar color
+          shadowColor: themeData[currentSettings['theme']]!['shadow'], // appbar shadow color
+          elevation: 4.0, // appbar shadow elevation
           leading: Container(
+            // adding left margin to the leading icon so that it is not stuck to the left edge
             margin: EdgeInsets.only(
               left: 15.0 * widthFactor,
             ),
             child: IconButton(
-              padding: EdgeInsets.only(
-                left: 15.0 * widthFactor,
-              ),
               onPressed: () {
                 Navigator.pushNamed(context, '/homepage');
               },
               icon: Icon(
-                Icons.home, 
+                Icons.home, // home icon
                 color: themeData[currentSettings['theme']]!['text'],
                 size: 30 * heightFactor
               )
             ),
           ),
+          // title of the screen
           title: Center(
             child: Text(
               'Settings',
@@ -65,22 +66,17 @@ class _SettingsWindowState extends State<SettingsWindow> {
             ),
           ),
           actions: [
+            // back button to go back to the previous screen
             Container(
               margin: EdgeInsets.only(
-                top: 8.0 * heightFactor,
-                bottom: 8.0 * heightFactor,
-                right: 8.0 * widthFactor,
-                left: 8.0 * widthFactor,
+                right: 15.0 * widthFactor,
               ),
               child: IconButton(
-                padding: EdgeInsets.only(
-                  right: 15.0 * widthFactor,
-                ),
                 onPressed: () {
                   Navigator.pop(context, 'themeChanged');
                 },
                 icon: Icon(
-                  Icons.arrow_back_sharp, 
+                  Icons.arrow_back_sharp, // back icon
                   color: themeData[currentSettings['theme']]!['text'], 
                   size: 30 * heightFactor
                 )
@@ -88,22 +84,23 @@ class _SettingsWindowState extends State<SettingsWindow> {
             ),
           ]
         ),
+        // floating action button to save the settings
         floatingActionButton: FloatingActionButton(
             onPressed: () {
               setState(() {});
               Navigator.pop(context, 'themeChanged');
             },
-            backgroundColor: themeData[currentSettings['theme']]!['accent']!,
+            backgroundColor: themeData[currentSettings['theme']]!['accent']!, // floating action button color
             child: Icon(
-              Icons.save, 
-              color: themeData[currentSettings['theme']]!['text']!
+              Icons.save, // save icon
+              color: themeData[currentSettings['theme']]!['text']! // save icon color
             ),
         ),
         body: SingleChildScrollView(
           child: Form(
             child: Column(
               children: [
-                // Theme
+                // Theme settings
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -113,7 +110,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Theme',
+                      'Theme', // theme title
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
@@ -128,23 +125,25 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // light theme radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Light',
+                      'Light', // light theme
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: false,
-                    groupValue: dark,
+                    value: false, // value of the radio button
+                    groupValue: isDark, // group value of the radio buttons
                     onChanged: (value) {
+                      // on change of the radio button
                       setState(() {
-                        dark = value as bool;
-                        currentSettings['theme'] = 'light';
-                        settings.put('theme', 'light');
+                        isDark = value as bool; // set the value of the radio button
+                        currentSettings['theme'] = 'light'; // set the theme to light
+                        settings.put('theme', 'light'); // save the theme to the settings
                       });
                     },
                   ),
@@ -154,27 +153,29 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // dark theme radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Dark',
+                      'Dark', // dark theme
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: true,
-                    groupValue: dark,
+                    value: true, // value of the radio button
+                    groupValue: isDark, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        dark = value as bool;
-                        currentSettings['theme'] = 'dark';
-                        settings.put('theme', 'dark');
+                        isDark = value as bool; // set the value of the radio button
+                        currentSettings['theme'] = 'dark'; // set the theme to dark
+                        settings.put('theme', 'dark'); // save the theme to the settings
                       });
                     },
                   ),
                 ),
+                // space between the radio buttons
                 Container(
                   height: 8.0 * heightFactor,
                 ),
@@ -191,7 +192,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
-                // Temperature
+                // Temperature Unit settings
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -201,7 +202,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Temperature Unit',
+                      'Temperature Unit', // temperature title
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
@@ -216,23 +217,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // celcius radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Celcius (°C)',
+                      'Celcius (°C)', // celcius
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'celcius',
-                    groupValue: temperature,
+                    value: 'celcius', // value of the radio button
+                    groupValue: temperature, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        temperature = value as String;
-                        currentSettings['temperature'] = 'celcius';
-                        settings.put('temperature', 'celcius');
+                        temperature = value as String; // set the value of the radio button
+                        currentSettings['temperature'] = 'celcius'; // set the temperature to celcius
+                        settings.put('temperature', 'celcius'); // save the temperature to the settings
                       });
                     },
                   ),
@@ -242,23 +244,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // fahrenheit radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Fahrenheit (°F)',
+                      'Fahrenheit (°F)', // fahrenheit
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'fahrenheit',
-                    groupValue: temperature,
+                    value: 'fahrenheit', // value of the radio button
+                    groupValue: temperature, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        temperature = value as String;
-                        currentSettings['temperature'] = 'fahrenheit';
-                        settings.put('temperature', 'fahrenheit');
+                        temperature = value as String; // set the value of the radio button
+                        currentSettings['temperature'] = 'fahrenheit'; // set the temperature to fahrenheit
+                        settings.put('temperature', 'fahrenheit'); // save the temperature to the settings
                       });
                     },
                   ),
@@ -268,27 +271,29 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // kelvin radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Kelvin (K)',
+                      'Kelvin (K)', // kelvin
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'kelvin',
-                    groupValue: temperature,
+                    value: 'kelvin', // value of the radio button
+                    groupValue: temperature, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        temperature = value as String;
-                        currentSettings['temperature'] = 'kelvin';
-                        settings.put('temperature', 'kelvin');
+                        temperature = value as String; // set the value of the radio button
+                        currentSettings['temperature'] = 'kelvin'; // set the temperature to kelvin
+                        settings.put('temperature', 'kelvin'); // save the temperature to the settings
                       });
                     },
                   ),
                 ),
+                // space between the radio buttons
                 Container(
                   height: 8.0 * heightFactor,
                 ),
@@ -305,7 +310,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
-                // Wind Speed
+                // Wind Speed settings
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -315,7 +320,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Wind-Speed Unit',
+                      'Wind-Speed Unit', // wind speed title
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
@@ -330,23 +335,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // meter per second radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Meter per Second (m/s)',
+                      'Meter per Second (m/s)', // meter per second
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'meter-per-second',
-                    groupValue: windspeed,
+                    value: 'meter-per-second', // value of the radio button
+                    groupValue: windspeed, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        windspeed = value as String;
-                        currentSettings['wind_speed'] = 'meter-per-second';
-                        settings.put('wind_speed', 'meter-per-second');
+                        windspeed = value as String; // set the value of the radio button
+                        currentSettings['wind_speed'] = 'meter-per-second'; // set the wind speed to meter per second
+                        settings.put('wind_speed', 'meter-per-second'); // save the wind speed to the settings
                       });
                     },
                   ),
@@ -356,23 +362,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // kilometer per hour radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Kilometer per Hour (km/h)',
+                      'Kilometer per Hour (km/h)', // kilometer per hour
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'kilometer-per-hour',
-                    groupValue: windspeed,
+                    value: 'kilometer-per-hour', // value of the radio button
+                    groupValue: windspeed, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        windspeed = value as String;
-                        currentSettings['wind_speed'] = 'kilometer-per-hour';
-                        settings.put('wind_speed', 'kilometer-per-hour');
+                        windspeed = value as String; // set the value of the radio button
+                        currentSettings['wind_speed'] = 'kilometer-per-hour';  // set the wind speed to kilometer per hour
+                        settings.put('wind_speed', 'kilometer-per-hour'); // save the wind speed to the settings
                       });
                     },
                   ),
@@ -382,27 +389,29 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // miles per hour radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Miles per Hour (mph)',
+                      'Miles per Hour (mph)', // miles per hour
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'miles-per-hour',
-                    groupValue: windspeed,
+                    value: 'miles-per-hour', // value of the radio button
+                    groupValue: windspeed, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        windspeed = value as String;
-                        currentSettings['wind_speed'] = 'miles-per-hour';
-                        settings.put('wind_speed', 'miles-per-hour');
+                        windspeed = value as String; // set the value of the radio button
+                        currentSettings['wind_speed'] = 'miles-per-hour'; // set the wind speed to miles per hour
+                        settings.put('wind_speed', 'miles-per-hour'); // save the wind speed to the settings
                       });
                     },
                   ),
                 ),
+                // space between the radio buttons
                 Container(
                   height: 8.0 * heightFactor,
                 ),
@@ -419,7 +428,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
-                // Pressure
+                // Pressure settings
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -429,7 +438,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Pressure Unit',
+                      'Pressure Unit',  // pressure title
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
@@ -444,23 +453,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // pascal radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Pascal (Pa)',
+                      'Pascal (Pa)', // pascal
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'pa',
-                    groupValue: pressure,
+                    value: 'pa', // value of the radio button
+                    groupValue: pressure, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        pressure = value as String;
-                        currentSettings['pressure'] = 'pa';
-                        settings.put('pressure', 'pa');
+                        pressure = value as String; // set the value of the radio button
+                        currentSettings['pressure'] = 'pa'; // set the pressure to pascal
+                        settings.put('pressure', 'pa'); // save the pressure to the settings
                       });
                     },
                   ),
@@ -470,23 +480,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // hectopascal radio button
                   child: RadioListTile(
-                    activeColor: themeData[currentSettings['theme']]!['text'],
+                    activeColor: themeData[currentSettings['theme']]!['text'], 
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Hectopascal (hPa) (1 hPa = 100 Pa)',
+                      'Hectopascal (hPa) (1 hPa = 100 Pa)', // hectopascal
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'hPa',
-                    groupValue: pressure,
+                    value: 'hPa', // value of the radio button
+                    groupValue: pressure, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        pressure = value as String;
-                        currentSettings['pressure'] = 'hPa';
-                        settings.put('pressure', 'hPa');
+                        pressure = value as String; // set the value of the radio button
+                        currentSettings['pressure'] = 'hPa'; // set the pressure to hectopascal
+                        settings.put('pressure', 'hPa'); // save the pressure to the settings
                       });
                     },
                   ),
@@ -496,23 +507,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // standard atmosphere radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Standard Atmosphere (atm)',
+                      'Standard Atmosphere (atm)', // standard atmosphere
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'atm',
-                    groupValue: pressure,
+                    value: 'atm', // value of the radio button
+                    groupValue: pressure, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        pressure = value as String;
-                        currentSettings['pressure'] = 'atm';
-                        settings.put('pressure', 'atm');
+                        pressure = value as String; // set the value of the radio button
+                        currentSettings['pressure'] = 'atm'; // set the pressure to standard atmosphere
+                        settings.put('pressure', 'atm'); // save the pressure to the settings
                       });
                     },
                   ),
@@ -522,27 +534,29 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // millimeters of mercury radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Millimeters of Mercury (mmHg)',
+                      'Millimeters of Mercury (mmHg)', // millimeters of mercury
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'mmHg',
-                    groupValue: pressure,
+                    value: 'mmHg', // value of the radio button
+                    groupValue: pressure, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        pressure = value as String;
-                        currentSettings['pressure'] = 'mmHg';
-                        settings.put('pressure', 'mmHg');
+                        pressure = value as String; // set the value of the radio button
+                        currentSettings['pressure'] = 'mmHg'; // set the pressure to millimeters of mercury
+                        settings.put('pressure', 'mmHg'); // save the pressure to the settings
                       });
                     },
                   ),
                 ),
+                // space between the radio buttons
                 Container(
                   height: 8.0 * heightFactor,
                 ),
@@ -559,7 +573,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
-                // Visibility
+                // Visibility settings
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -569,7 +583,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Visibility Unit',
+                      'Visibility Unit', // visibility title
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
@@ -584,23 +598,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // meters radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Meters (m)',
+                      'Meters (m)', // meters
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'meters',
-                    groupValue: visibility,
+                    value: 'meters', // value of the radio button
+                    groupValue: visibility, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        visibility = value as String;
-                        currentSettings['visibility'] = 'meters';
-                        settings.put('visibility', 'meters');
+                        visibility = value as String; // set the value of the radio button
+                        currentSettings['visibility'] = 'meters'; // set the visibility to meters
+                        settings.put('visibility', 'meters'); // save the visibility to the settings
                       });
                     },
                   ),
@@ -610,23 +625,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // kilometers radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Kilometers (km)',
+                      'Kilometers (km)', // kilometers
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'kilometers',
-                    groupValue: visibility,
+                    value: 'kilometers', // value of the radio button
+                    groupValue: visibility, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        visibility = value as String;
-                        currentSettings['visibility'] = 'kilometers';
-                        settings.put('visibility', 'kilometers');
+                        visibility = value as String; // set the value of the radio button
+                        currentSettings['visibility'] = 'kilometers'; // set the visibility to kilometers
+                        settings.put('visibility', 'kilometers'); // save the visibility to the settings
                       });
                     },
                   ),
@@ -636,23 +652,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // miles radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Miles (miles)',
+                      'Miles (miles)', // miles
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'miles',
-                    groupValue: visibility,
+                    value: 'miles', // value of the radio button
+                    groupValue: visibility, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        visibility = value as String;
-                        currentSettings['visibility'] = 'miles';
-                        settings.put('visibility', 'miles');
+                        visibility = value as String; // set the value of the radio button
+                        currentSettings['visibility'] = 'miles'; // set the visibility to miles
+                        settings.put('visibility', 'miles'); // save the visibility to the settings
                       });
                     },
                   ),
@@ -662,27 +679,29 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // feet radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Feet (ft)',
+                      'Feet (ft)', // feet
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'feet',
-                    groupValue: visibility,
+                    value: 'feet', // value of the radio button
+                    groupValue: visibility, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        visibility = value as String;
-                        currentSettings['visibility'] = 'feet';
-                        settings.put('visibility', 'feet');
+                        visibility = value as String; // set the value of the radio button
+                        currentSettings['visibility'] = 'feet'; // set the visibility to feet
+                        settings.put('visibility', 'feet'); // save the visibility to the settings
                       });
                     },
                   ),
                 ),
+                // space between the radio buttons
                 Container(
                   height: 8.0 * heightFactor,
                 ),
@@ -699,7 +718,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
-                // Time Format
+                // Time Format settings
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -709,7 +728,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Time Format',
+                      'Time Format', // time format title
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
@@ -724,23 +743,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // 24 hour radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      '24 Hour',
+                      '24 Hour', // 24 hour
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: '24',
-                    groupValue: timeFormat,
+                    value: '24', // value of the radio button
+                    groupValue: timeFormat, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        timeFormat = value as String;
-                        currentSettings['time_format'] = '24';
-                        settings.put('time_format', '24');
+                        timeFormat = value as String; // set the value of the radio button
+                        currentSettings['time_format'] = '24'; // set the time format to 24 hour
+                        settings.put('time_format', '24');  // save the time format to the settings
                       });
                     },
                   ),
@@ -750,27 +770,29 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // 12 hour radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      '12 Hour',
+                      '12 Hour', // 12 hour
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: '12',
-                    groupValue: timeFormat,
+                    value: '12', // value of the radio button
+                    groupValue: timeFormat, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        timeFormat = value as String;
-                        currentSettings['time_format'] = '12';
-                        settings.put('time_format', '12');
+                        timeFormat = value as String; // set the value of the radio button
+                        currentSettings['time_format'] = '12'; // set the time format to 12 hour
+                        settings.put('time_format', '12'); // save the time format to the settings
                       });
                     },
                   ),
                 ),
+                // space between the radio buttons
                 Container(
                   height: 8.0 * heightFactor,
                 ),
@@ -787,7 +809,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                 Container(
                   height: 8.0 * heightFactor,
                 ),
-                // Date Format
+                // Date Format settings
                 Padding(
                   padding: EdgeInsets.only(
                     top: 15.0 * heightFactor,
@@ -797,7 +819,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'Date Format',
+                      'Date Format', // date format title
                       style: TextStyle(
                         fontSize: 20.0 * heightFactor,
                         color: themeData[currentSettings['theme']]!['text'],
@@ -812,23 +834,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // day month year radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Day / Month / Year',
+                      'Day / Month / Year', // day month year
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'dmy',
-                    groupValue: dateFormat,
+                    value: 'dmy', // value of the radio button
+                    groupValue: dateFormat, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
                         dateFormat = value as String;
-                        currentSettings['date_format'] = 'dmy';
-                        settings.put('date_format', 'dmy');
+                        currentSettings['date_format'] = 'dmy'; // set the date format to day month year
+                        settings.put('date_format', 'dmy'); // save the date format to the settings
                       });
                     },
                   ),
@@ -838,23 +861,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // day year month radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Day / Year / Month',
+                      'Day / Year / Month', // day year month
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'dym',
-                    groupValue: dateFormat,
+                    value: 'dym', // value of the radio button
+                    groupValue: dateFormat, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        dateFormat = value as String;
-                        currentSettings['date_format'] = 'dym';
-                        settings.put('date_format', 'dym');
+                        dateFormat = value as String; // set the value of the radio button
+                        currentSettings['date_format'] = 'dym'; // set the date format to day year month
+                        settings.put('date_format', 'dym'); // save the date format to the settings
                       });
                     },
                   ),
@@ -864,23 +888,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // month day year radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Month / Day / Year',
+                      'Month / Day / Year', // month day year
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'mdy',
-                    groupValue: dateFormat,
+                    value: 'mdy', // value of the radio button
+                    groupValue: dateFormat, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        dateFormat = value as String;
-                        currentSettings['date_format'] = 'mdy';
-                        settings.put('date_format', 'mdy');
+                        dateFormat = value as String; // set the value of the radio button
+                        currentSettings['date_format'] = 'mdy'; // set the date format to month day year
+                        settings.put('date_format', 'mdy'); // save the date format to the settings
                       });
                     },
                   ),
@@ -890,23 +915,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // month year day radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Month / Year / Day',
+                      'Month / Year / Day', // month year day
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'myd',
-                    groupValue: dateFormat,
+                    value: 'myd', // value of the radio button
+                    groupValue: dateFormat, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        dateFormat = value as String;
-                        currentSettings['date_format'] = 'myd';
-                        settings.put('date_format', 'myd');
+                        dateFormat = value as String; // set the value of the radio button
+                        currentSettings['date_format'] = 'myd'; // set the date format to month year day
+                        settings.put('date_format', 'myd'); // save the date format to the settings
                       });
                     },
                   ),
@@ -916,23 +942,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // year day month radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Year / Month / Day',
+                      'Year / Month / Day', // year month day
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'ymd',
-                    groupValue: dateFormat,
+                    value: 'ymd', // value of the radio button
+                    groupValue: dateFormat, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        dateFormat = value as String;
-                        currentSettings['date_format'] = 'ymd';
-                        settings.put('date_format', 'ymd');
+                        dateFormat = value as String; // set the value of the radio button
+                        currentSettings['date_format'] = 'ymd'; // set the date format to year month day
+                        settings.put('date_format', 'ymd'); // save the date format to the settings
                       });
                     },
                   ),
@@ -942,23 +969,24 @@ class _SettingsWindowState extends State<SettingsWindow> {
                     right: 8.0 * widthFactor,
                     left: 8.0 * widthFactor,
                   ),
+                  // year month day radio button
                   child: RadioListTile(
                     activeColor: themeData[currentSettings['theme']]!['text'],
                     fillColor: WidgetStateProperty.all(themeData[currentSettings['theme']]!['text']),
                     title: Text(
-                      'Year / Day / Month',
+                      'Year / Day / Month', // year day month
                       style: TextStyle(
                         color: themeData[currentSettings['theme']]!['text'],
                         fontFamily: 'Fredoka'
                       ),
                     ),
-                    value: 'ydm',
-                    groupValue: dateFormat,
+                    value: 'ydm', // value of the radio button
+                    groupValue: dateFormat, // group value of the radio buttons
                     onChanged: (value) {
                       setState(() {
-                        dateFormat = value as String;
-                        currentSettings['date_format'] = 'ydm';
-                        settings.put('date_format', 'ydm');
+                        dateFormat = value as String; // set the value of the radio button
+                        currentSettings['date_format'] = 'ydm';  // set the date format to year day month
+                        settings.put('date_format', 'ydm'); // save the date format to the settings
                       });
                     },
                   ),
@@ -967,7 +995,7 @@ class _SettingsWindowState extends State<SettingsWindow> {
             ),
           ),
         ),
-        backgroundColor: themeData[currentSettings['theme']]!['main_body_background'],
+        backgroundColor: themeData[currentSettings['theme']]!['main_body_background'], // background color of the screen
       ),
     );
   }

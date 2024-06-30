@@ -28,7 +28,7 @@ List<Map<String, String>> teamData = [
     'role': 'Tester',
     'image': 'assets/images/arash.jpg',
     'matriculation': '26819056',
-    'email': 'arash.rahmani@ue-germani.de'
+    'email': 'arash.rahmani@ue-germany.de'
   },
   {
     'name': 'Shaurrya Baheti',

@@ -4,8 +4,17 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:weather/weather.dart';
 
 var settings = Hive.box('settings');
+var x = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+String theme = x == Brightness.dark ? 'dark' : 'light';
+// ignore: unused_element
+var _ = settings.put('theme', theme);
 
 String previousRoute = '/homepage';
+
+double heightFactor = 1;
+double widthFactor = 1;
+double deviceWidth = 484;
+double deviceHeight = 1025;
 
 const Map<String, String> temperatures = {
   'celcius': '°C',
@@ -19,6 +28,15 @@ const Map<String, String> windspeeds = {
   'miles-per-hour': 'mph',
 };
 
+Map<String, String> currentSettings = {
+  'temperature': settings.get('temperature', defaultValue: 'celcius'),
+  'wind_speed': settings.get('wind_speed', defaultValue: 'meter-per-second'),
+  'theme': settings.get('theme', defaultValue: theme),
+  'time_format': settings.get('time_format', defaultValue: '24'),
+  'date_format': settings.get('date_format', defaultValue: 'dmy'),
+  'pressure': settings.get('pressure', defaultValue: 'hPa'),
+  'visibility': settings.get('visibility', defaultValue: 'meters'),
+};
 
 dynamic makeIcon(String icon, String size) {
   if (icon == '') {
@@ -74,23 +92,10 @@ String makeReadableDate(DateTime d) {
   }
 }
 
-double heightFactor = 1;
-double widthFactor = 1;
-double deviceWidth = 484;
-double deviceHeight = 1025;
 
-var x = SchedulerBinding.instance.platformDispatcher.platformBrightness;
-String theme = x == Brightness.dark ? 'dark' : 'light';
 
-Map<String, String> currentSettings = {
-  'temperature': settings.get('temperature', defaultValue: 'celcius'),
-  'wind_speed': settings.get('wind_speed', defaultValue: 'meter-per-second'),
-  'theme': settings.get('theme', defaultValue: theme),
-  'time_format': settings.get('time_format', defaultValue: '24'),
-  'date_format': settings.get('date_format', defaultValue: 'dmy'),
-  'pressure': settings.get('pressure', defaultValue: 'hPa'),
-  'visibility': settings.get('visibility', defaultValue: 'meters'),
-};
+
+
 
 String convertPressure(double pressure) {
   String unit = settings.get('pressure', defaultValue: 'hPa');
