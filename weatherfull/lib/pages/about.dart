@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../allsettings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // About screen stateful widget
 class AboutUsScreen extends StatefulWidget {
@@ -10,6 +11,12 @@ class AboutUsScreen extends StatefulWidget {
 }
 
 class _AboutUsScreenState extends State<AboutUsScreen> {
+
+  // launch url function
+  Future<void> launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    await launchUrl(uri); // launch the url in the browser 
+  }
 
   // build method
   @override
@@ -55,7 +62,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
           actions: <Widget>[
             Container(
               margin: EdgeInsets.only(
-                right: 15.0 * widthFactor
+                right: 5.0 * widthFactor
               ),
               child: IconButton(
                 icon: Icon(
@@ -69,6 +76,22 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   if (result == 'themeChanged') {
                     setState(() {});
                   }
+                },
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                right: 15.0 * widthFactor
+              ),
+              child: IconButton(
+                icon: Icon(
+                  Icons.web, // website icon
+                  color: themeData[currentSettings['theme']]!['text'],
+                  size: 30.0 * heightFactor,
+                ),
+                onPressed: () {
+                  // on press launch the website
+                  launchURL('http://weatherfull.xyz/');
                 },
               ),
             ),

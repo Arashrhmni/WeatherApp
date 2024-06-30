@@ -35,7 +35,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  flutter_launcher_icons: ^0.13.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   weather: ^3.1.1
@@ -49,25 +48,7 @@ dependencies:
       url: https://github.com/google/flutter-desktop-embedding.git
       path: plugins/window_size
   mailer: ^6.1.0
-
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/icons/icon.png"
-  adaptive_icon_background: "assets/icons/icon_background.png"
-  remove_alpha_ios: true
-  web:
-    generate: true
-    image_path: "assets/icons/icon.png"
-  windows:
-    generate: true
-    image_path: "assets/icons/icon.png"
-  linux:
-    generate: true
-    image_path: "assets/icons/icon.png"
-  macos:
-    generate: true
-    image_path: "assets/icons/icon.png"
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
