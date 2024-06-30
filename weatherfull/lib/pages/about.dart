@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../allsettings.dart';
 
+// About screen stateful widget
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({super.key});
 
@@ -8,57 +9,16 @@ class AboutUsScreen extends StatefulWidget {
   State<AboutUsScreen> createState() => _AboutUsScreenState();
 }
 
-List<Map<String, String>> teamData = [
-  {
-    'name': 'Rafael de Athayde Moraes',
-    'role': 'Scrum Master',
-    'image': 'assets/images/rafael.jpg',
-    'matriculation': '59752266',
-    'email': 'rafael.deathaydemoraes@ue-germany.de'
-  },
-  {
-    'name': 'Paulo Cesar Moraes',
-    'role': 'Product Owner',
-    'image': 'assets/images/paulo.jpg',
-    'matriculation': '39960655',
-    'email': 'paulocesar.quadrosdefreitascardosodemoraes@ue-germany.de'
-  },
-  {
-    'name': 'Arash Rahmani',
-    'role': 'Tester',
-    'image': 'assets/images/arash.jpg',
-    'matriculation': '26819056',
-    'email': 'arash.rahmani@ue-germany.de'
-  },
-  {
-    'name': 'Shaurrya Baheti',
-    'role': 'Developer',
-    'image': 'assets/images/shaurrya.jpg',
-    'matriculation': '63119302',
-    'email': 'shaurrya.baheti@ue-germany.de'
-  },
-  {
-    'name': 'Srivetrikumaran Senthilnayagam',
-    'role': 'Developer',
-    'image': 'assets/images/siri.jpg',
-    'matriculation': '63292185',
-    'email': 'senthilnayagam.srivetrikumaran@ue-germany.de'
-  },
-  {
-    'name': 'Emmanuel Nwogo',
-    'role': 'Developer',
-    'image': 'assets/images/emmanuel.jpg',
-    'matriculation': '99219199',
-    'email': 'emmanuel.nwogo@ue-germany.de'
-  },
-];
-
 class _AboutUsScreenState extends State<AboutUsScreen> {
+
+  // build method
   @override
   Widget build(BuildContext context) {
+    // will pop scope to handle back button press
     // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () {
+        // pop and push the homescreen
         Navigator.popAndPushNamed(context, '/homepage');
         return Future.value(false);
       },
@@ -66,7 +26,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
         appBar: AppBar(
           title: Center(
             child: Text(
-              'About Us',
+              'About Us', // Window title
               style: TextStyle(
                 color: themeData[currentSettings['theme']]!['text'],
                 fontSize: 30.0 * heightFactor,
@@ -75,56 +35,69 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               ),
             ),
           ),
-          leading: IconButton(
-            padding: EdgeInsets.only(left: 10.0 * widthFactor),
-            icon: Icon(
-              Icons.home,
-              color: themeData[currentSettings['theme']]!['text'],
-              size: 30.0 * heightFactor,
+          // leading icon for home
+          leading: Container(
+            margin: EdgeInsets.only(
+              left: 15.0 * widthFactor,
             ),
-            onPressed: () {
-              Navigator.popAndPushNamed(context, '/homepage');
-            },
-          ),
-          actions: <Widget>[
-            IconButton(
-              padding: EdgeInsets.only(right: 10.0 * widthFactor),
+            child: IconButton(
               icon: Icon(
-                Icons.settings,
+                Icons.home, // Home icon
                 color: themeData[currentSettings['theme']]!['text'],
                 size: 30.0 * heightFactor,
               ),
-              onPressed: () async {
-                var result = await Navigator.pushNamed(context, '/settings');
-                if (result == 'themeChanged') {
-                  setState(() {});
-                }
+              onPressed: () {
+                // on press pop and push the home screen
+                Navigator.popAndPushNamed(context, '/homepage');
               },
             ),
+          ),
+          actions: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                right: 15.0 * widthFactor
+              ),
+              child: IconButton(
+                icon: Icon(
+                  Icons.settings, // settings menu button
+                  color: themeData[currentSettings['theme']]!['text'],
+                  size: 30.0 * heightFactor,
+                ),
+                onPressed: () async {
+                  // on press switch to the settings screen, which when popped would update this page
+                  var result = await Navigator.pushNamed(context, '/settings');
+                  if (result == 'themeChanged') {
+                    setState(() {});
+                  }
+                },
+              ),
+            ),
           ],
-          backgroundColor: themeData[currentSettings['theme']]!['appBar'],
-          elevation: 4.0,
-          shadowColor: themeData[currentSettings['theme']]!['shadow'],
+          backgroundColor: themeData[currentSettings['theme']]!['appBar'], // appbar color
+          elevation: 4.0, // elevation
+          shadowColor: themeData[currentSettings['theme']]!['shadow'], // shadow color
         ),
         body: Container(
-          color: themeData[currentSettings['theme']]!['main_body_background'],
+          color: themeData[currentSettings['theme']]!['main_body_background'], // main body color
+          // child list view to display the team members
           child: ListView.builder(
-            itemCount: teamData.length,
+            itemCount: teamData.length, // team data length
             itemBuilder: (context, index) {
               return Card(
-                color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4),
+                color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.4), // card color
                 margin: EdgeInsets.fromLTRB(
-                  10.0 * widthFactor, 
-                  (index == 0 || index == teamData.length - 1) ? (index == teamData.length - 1 ? 5.0 : 10.0) * heightFactor : 5.0 * heightFactor, 
-                  10.0 * widthFactor, 
-                  (index == 0 || index == teamData.length - 1) ? ( index == 0 ? 5.0 : 10.0) * heightFactor : 5.0 * heightFactor
+                  10.0 * widthFactor, // margin left
+                  (index == 0 || index == teamData.length - 1) ? (index == teamData.length - 1 ? 5.0 : 10.0) * heightFactor : 5.0 * heightFactor,  // margin top
+                  10.0 * widthFactor,  // margin right
+                  (index == 0 || index == teamData.length - 1) ? ( index == 0 ? 5.0 : 10.0) * heightFactor : 5.0 * heightFactor // margin bottom
                 ),
-                elevation: 3.0,
-                shadowColor: themeData[currentSettings['theme']]!['shadow'],
+                elevation: 4.0, // elevation
+                shadowColor: themeData[currentSettings['theme']]!['shadow'], // shadow color
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(10.0), // border radius
                 ),
                 child: Container(
+                  // container decoration
                   decoration: BoxDecoration(
                     color: themeData[currentSettings['theme']]!['accent']!.withOpacity(0.6),
                     borderRadius: BorderRadius.circular(10.0),
@@ -133,12 +106,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                       width: 2.0,
                     ),
                   ),
+                  // padding of the container
                   padding: EdgeInsets.only(
                     left: 10.0 * widthFactor,
                     right: 10.0 * widthFactor,
                   ),
                   child: Row(
                     children: [
+                      // if index is even, display the image on the left
                       if (index % 2 == 0)
                         CircleAvatar(
                           radius: 40.0,
@@ -146,6 +121,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                         ),
                       Expanded(
                         child: Container(
+                          // container margin
                           margin: EdgeInsets.only(
                             left: 15.0 * widthFactor,
                             right: 15.0 * widthFactor,
@@ -155,6 +131,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // team member name
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Text(
@@ -167,11 +144,13 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                   ),
                                 ),
                               ),
+                              // divider
                               Container(
                                 margin: EdgeInsets.only(top: 5.0 * heightFactor, bottom: 5.0 * heightFactor),
                                 height: 1.0,
                                 color: themeData[currentSettings['theme']]!['text'],
                               ),
+                              // team member details
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
@@ -262,6 +241,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           ),
                         ),
                       ),
+                      // if index is odd, display the image on the right
                       if (index % 2 == 1)
                         CircleAvatar(
                           radius: 40.0,
@@ -274,7 +254,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
             },
           ),
         ),
-        backgroundColor: themeData[currentSettings['theme']]!['main_body_background'],
+        backgroundColor: themeData[currentSettings['theme']]!['main_body_background'], // main body color
       ),
     );
   }

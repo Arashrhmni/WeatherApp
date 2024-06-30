@@ -2,14 +2,15 @@ import '../allsettings.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+// settings box
 var settings = Hive.box('settings');
-bool isDark = settings.get('theme', defaultValue: theme) == 'dark';
-String windspeed = settings.get('wind_speed', defaultValue: 'meter-per-second');
-String temperature = settings.get('temperature', defaultValue: 'celcius');
-String timeFormat = settings.get('time_format', defaultValue: '24');
-String dateFormat = settings.get('date_format', defaultValue: 'dmy');
-String pressure = settings.get('pressure', defaultValue: 'hPa');
-String visibility = settings.get('visibility', defaultValue: 'meters');
+bool isDark = settings.get('theme', defaultValue: theme) == 'dark'; // dark theme boolean
+String windspeed = settings.get('wind_speed', defaultValue: 'meter-per-second'); // wind speed
+String temperature = settings.get('temperature', defaultValue: 'celcius'); // temperature
+String timeFormat = settings.get('time_format', defaultValue: '24'); // time format
+String dateFormat = settings.get('date_format', defaultValue: 'dmy'); // date format
+String pressure = settings.get('pressure', defaultValue: 'hPa'); // pressure
+String visibility = settings.get('visibility', defaultValue: 'meters'); // visibility
 
 // settings stateless widget
 class SettingsWindow extends StatefulWidget {

@@ -627,7 +627,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         // the button style
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(150, 255, 255, 255)),
-                          elevation: WidgetStateProperty.all(4.0), // the elevation of the button
+                          elevation: WidgetStateProperty.all(5.0), // the elevation of the button
                           shadowColor: WidgetStateProperty.all<Color>(themeData[currentSettings['theme']]!['shadow']!), // the shadow color of the button
                           shape: WidgetStateProperty.all<CircleBorder>(const CircleBorder()), // the shape of the button is a circle
                         ),
